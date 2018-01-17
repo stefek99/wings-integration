@@ -20,9 +20,9 @@ During its lifetime, `Crowdsale` contract may reside in the following states:
 `Crowdsale` instance is managed by `CrowdsaleController` instance, which is a part of Wings contracts infrastructure.
 
 It’s necessary for custom crowdsale contract to keep in actual state all public fields of [ICrowdsaleProcessor](https://github.com/WingsDao/3rd-party-integration/blob/master/interfaces/ICrowdsaleProcessor.sol) observing the following rules:
-1. `totalCollected` and `totalSold` increase during active state;
-2. `minimalGoal` and `hardCap` can be changed any number of times before `start()` is called, but not after that;
-3. `duration` and timestamps (`startTimestamp` and `endTimestamp`) are set in `start()` function.
++ `totalCollected` and `totalSold` increase during active state;
++ `minimalGoal` and `hardCap` can be changed any number of times before `start()` is called, but not after that;
++ `duration` and timestamps (`startTimestamp` and `endTimestamp`) are set in `start()` function.
 
 For more detailed requirements, see the [custom crowdsale review checklist](https://github.com/WingsDao/3rd-party-integration/blob/master/custom-crowdsale-review-checklist.txt)
 
@@ -30,7 +30,7 @@ For more detailed requirements, see the [custom crowdsale review checklist](http
 
 + [zeppelin-solidity](https://github.com/OpenZeppelin/zeppelin-solidity), also available via `npm`:
 
-    npm install zeppelin-solidity
+    `npm install zeppelin-solidity`
 
 ### License
 
