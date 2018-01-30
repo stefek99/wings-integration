@@ -34,6 +34,6 @@ For more detailed requirements, see the [custom crowdsale review checklist](http
 
 ### License
 
-*TODO* GPL3???
+Apache v2 license.
 
 Copyright 2017 © Wings Stiftung. All rights reserved.
