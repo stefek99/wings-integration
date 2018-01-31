@@ -4,11 +4,23 @@ import "zeppelin-solidity/contracts/ownership/Ownable.sol";
 
 // Minimal crowdsale token for custom contracts
 contract CustomTokenExample is Ownable, StandardToken {
+    // ERC20 requirements
+    string public name;
+    string public symbol;
+    uint8 public decimals;
+
     // how many tokens was created (i.e. minted)
     uint256 public totalSupply;
 
     // here are 2 states: mintable (initial) and transferrable
     bool public releasedForTransfer;
+
+    // Ctor. Hardcodes names in this example
+    function CustomTokenExample() public {
+        name = "CustomTokenExample";
+        symbol = "CTE";
+        decimals = 18;
+    }
 
 // override these 2 functions to prevent from transferring tokens before it was released
 
@@ -30,7 +42,7 @@ contract CustomTokenExample is Ownable, StandardToken {
     }
 
     // creates new amount of the token from a thin air
-    function mint(address _recepient, uint256 _amount) public
+    function issue(address _recepient, uint256 _amount) public
         onlyOwner() // only owner can do it
     {
         // the owner can mint until released

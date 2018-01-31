@@ -54,7 +54,7 @@ contract CustomCrowdsale is BasicCrowdsale {
     onlyManager() // manager is CrowdsaleController instance
   {
     // crowdsale token is mintable in this example, tokens are created here
-    crowdsaleToken.mint(_contract, _amount);
+    crowdsaleToken.issue(_contract, _amount);
   }
 
   // transfers crowdsale token from mintable to transferrable state
@@ -102,7 +102,7 @@ contract CustomCrowdsale is BasicCrowdsale {
     uint256 tokensSold = _value * tokensPerEthPrice;
 
     // create new tokens for this buyer
-    crowdsaleToken.mint(_recepient, tokensSold);
+    crowdsaleToken.issue(_recepient, tokensSold);
 
     // remember the buyer so he/she/it may refund its ETH if crowdsale failed
     participants[_recepient] += _value;

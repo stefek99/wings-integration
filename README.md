@@ -9,6 +9,7 @@ Project owner should provide 2 contracts:
 Example contracts (see [example](https://github.com/WingsDao/3rd-party-integration/tree/master/example) directory):
 + [Custom crowdsale contract](https://github.com/WingsDao/3rd-party-integration/blob/master/example/CustomCrowdsale.sol);
 + [Token example with minting funciton](https://github.com/WingsDao/3rd-party-integration/blob/master/example/CustomTokenExample.sol)
++ [Token example which is compatible to Bancor's smart token interface](https://github.com/WingsDao/3rd-party-integration/blob/master/example/BancorCompatibleTokenExample.sol), see specifications for [Bancor protocol](https://github.com/bancorprotocol/contracts#the-smart-token-standard)
 
 During its lifetime, `Crowdsale` contract may reside in the following states:
 + Initial state: crowdsale is not yet started;
@@ -34,9 +35,7 @@ Custom crowdsale contract **must** be derived from `BasicCrowdsale` contract whi
 
 `BasicCrowdsale` ([see src](https://github.com/WingsDao/3rd-party-integration/blob/master/BasicCrowdsale.sol)) implements default behavior of custom crowdsale, but BasicCrowdsale.start(...) and BasicCrowdsale.stop() functions **must** be called (via `super` mechanism) if appropriate methods are overriden in derived contracts.
 
-### Fields
-
-#### Ownable fields
+### Ownable fields
 
 **owner**
 ```cs
@@ -47,7 +46,7 @@ Owner's address. Allows to make certain methods callbable by owner only (via `on
 <br>
 <br>
 
-#### HasManager fields
+### HasManager fields
 
 **manager**
 ```cs
@@ -58,7 +57,7 @@ Manager's address. Allows to make certain methods callbable by manager only (via
 <br>
 <br>
 
-#### ICrowdsaleProcessor fields
+### ICrowdsaleProcessor fields
 
 **started**
 ```cs
@@ -133,9 +132,7 @@ End timestamp of crowdsale, absolute UTC time
 <br>
 <br>
 
-### Methods
-
-#### Ownable methods
+### Ownable methods
 
 **transferOwnership**
 ```cs
@@ -146,7 +143,7 @@ Allows the current owner to transfer control of the contract to a newOwner.
 <br>
 <br>
 
-#### HasManager methods
+### HasManager methods
 
 **transferManager**
 ```cs
@@ -157,7 +154,7 @@ New manager transfers its functions to new address.
 <br>
 <br>
 
-#### ICrowdsaleProcessor methods
+### ICrowdsaleProcessor methods
 
 **deposit**
 ```cs
