@@ -1,6 +1,6 @@
 # Custom Crowdsale Contract Creation Guide
 
-## Overview
+### Overview
 
 Project owner should provide 2 contracts:
 + Token contract that complies to ERC20 specification and does exactly what it’s intended for. Also note that during the crowdfunding process token values should be somewhat produced ("minted" as in the example) or transferred ("sold") to the buyer's account from some special account;
@@ -239,19 +239,17 @@ Is crowdsale completed successfully.
 
 ## Dependencies
 
-+ [zeppelin-solidity](https://github.com/OpenZeppelin/zeppelin-solidity), also available via `npm`:
+    `npm install`
 
-    `npm install zeppelin-solidity`
-
-or by including this dependency to `package.json`
++ [zeppelin-solidity](https://github.com/OpenZeppelin/zeppelin-solidity)
 
 ## Developers
 
-+ [Artem Gorbachev](http://example.com)
-+ [Boris Povod](http://example.com)
++ [Artem Gorbachev](mailto:artem@wings.io)
++ [Boris Povod](mailto:boris@wings.io)
 
 ## License
 
-Apache v2.0 license.
+[GPL v3.0 License](LICENSE).
 
-Copyright 2017 © Wings Stiftung. All rights reserved.
+Copyright 2018 © Wings Stiftung. All rights reserved.
