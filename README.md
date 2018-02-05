@@ -1,6 +1,30 @@
-# Custom Crowdsale Contract Creation Guide
+# Wings Crowdsale Integration
 
-### Overview
+Wings is platform for evaluating and do ICO. Based on Ethereum smart contracts and IPFS.
+
+With Wings any ICO can pass evaluating procedure and launch ICO via Wings ICO constructor
+or by writing own crowdsale contract integrated with Wings.
+
+## Overview
+
+## Motivation
+
+## Security
+
+Need to understand, that this is work in progress. Remember that you still work with real money, and any issue can lead to financial losses.
+We strongly recommend to cover with tests your integration and implementation of crowdsale contract.
+
+We take no responsibility for your implementation decisions and any security problem you might experience during integration,
+even security issues in our smart contracts.
+
+If you reached security issues or any other issues, please, contact us by issues or sending us email: [support@wings.ai](mailto:support@wings.ai), we have generous bounties, read more [here](https://blog.wings.ai).
+
+## Help
+
+## Installation
+    
+
+## Getting Started 
 
 Project owner should provide 2 contracts:
 + Token contract that complies to ERC20 specification and does exactly what it’s intended for. Also note that during the crowdfunding process token values should be somewhat produced ("minted" as in the example) or transferred ("sold") to the buyer's account from some special account;
@@ -237,16 +261,12 @@ Is crowdsale completed successfully.
 <br>
 <br>
 
-## Dependencies
-
-    `npm install`
-
-+ [zeppelin-solidity](https://github.com/OpenZeppelin/zeppelin-solidity)
+## Examples
 
 ## Developers
 
-+ [Artem Gorbachev](mailto:artem@wings.io)
-+ [Boris Povod](mailto:boris@wings.io)
++ [Artem Gorbachev](mailto:artem@wings.ai)
++ [Boris Povod](mailto:boris@wings.ai)
 
 ## License
 
