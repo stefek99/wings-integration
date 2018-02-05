@@ -26,12 +26,12 @@ If during integration you need help, we strongly recommend to contact us by emai
 To be able to participate in Wings ecosystem project that going to create his own crowdsale smart contract
 should use current documentation as start point of integration to Wings rewards contracts.
 
-Integration can be divided in few steps:
+Integration can be splitted in few steps:
 
 1. Development of crowdsale smart contract
 2. Integration of Wings smart contracts
-3. Creation of a project with custom crowdsale contract on [Wings Platform](https://testnet.wings.ai)(via UI or manually)
-4. After forecasting successful done, start of custom crowdsale contract and crowdsale (via Wings Platform UI or manually)
+3. Creation of a project with custom crowdsale contract on [Wings Platform](https://testnet.wings.ai) (via UI or manually)
+4. After forecasting successful done, start of custom crowdsale contract and crowdsale on [Wings Platform](https://testnet.wings.ai) (via UI or manually)
 
 This documentation describing only 1 step (indeed integration), about other parts read our blog [post](https://blog.wings.ai).
 
@@ -68,11 +68,11 @@ contract MyCrowdsale is BasicCrowdsale {
 }
 ```
 
-Now read [specification](#specification) before start implementation of your crowdsale smart contract.
+Now read [specification](#integration) before start implementation of your crowdsale smart contract.
  
 If specification is not enough, we offer [step by step](#step-by-step) guide in additional.
 
-## Specification
+## Integration
 
 Project owner should provide 2 contracts:
 + Token contract that complies to ERC20 specification and does exactly what it’s intended for. Also note that during the crowdfunding process token values should be somewhat produced ("minted" as in the example) or transferred ("sold") to the buyer's account from some special account;
@@ -85,7 +85,7 @@ Example contracts (see [example](https://github.com/WingsDao/3rd-party-integrati
 
 During its lifetime, `Crowdsale` contract may reside in the following states:
 + Initial state: crowdsale is not yet started;
-+ Active state: when everyone is able to buy project’s tokens;
++ Active state: when everyone is able to buy project’s tokens (after crowdsale started);
 + Successful state: when crowdsale succeeded either by achieving hard cap or after crowdsale period ends, but collected value is equal to minimal goal or above;
 + Failed state: when crowdsale period finishes, but minimal goal is not reached *OR* if the project's owner didn't manage to start crowdfunding process during 7 days period after forecasting finished;
 + Stopped by owner: when project’s owners cancels crowdsale for some reason
@@ -97,9 +97,28 @@ It’s necessary for custom crowdsale contract to keep in actual state all publi
 + `minimalGoal` and `hardCap` can be changed any number of times before `start()` is called, but not after that;
 + `duration` and timestamps (`startTimestamp` and `endTimestamp`) are set in `start()` function.
 
-For more detailed requirements, see the [custom crowdsale review checklist](https://github.com/WingsDao/3rd-party-integration/blob/master/custom-crowdsale-review-checklist.txt)
+In additional should be sure, that:
++ Crowdsale contract should be started in 30 days after forecasting completed
++ Crowdsale contract should have minimal goal and hard cap
++ Crowdsale contract could be stopped by crowdsale contract creator
++ Crowdsale contract should be able to distribute rewards after crowdsale successful over (see **mintETHRewards** and **mintTokensRewards** functions)
 
-## Custom Crowdsale contract specification
+For more detailed requirements, see the [custom crowdsale review checklist](https://github.com/WingsDao/3rd-party-integration/blob/master/custom-crowdsale-review-checklist.txt):
+
+    While writing or reviewing custom Crowdsale contracts, please meet the following requirements:
+    
+    1. The contract has to be written in Solidity language and derive directly from BasicCrowdsale;
+    2. If stop() is overriden by derived contract then super.stop(...) (i.e BasicCrowdsale.stop()) must be called inside;
+    3. If start() is overriden by derived contract then super.start(...) (i.e BasicCrowdsale.start()) must be called inside;
+    4. Timestamps, as well as minimal goal and hard cap cannot be modified after BasicCrowdsale.start() is called;
+    5. totalCollected and totalSold fields increase during every token sale for right amounts;
+    6. Contract cannot sell tokens before startTimestamp, after endTimestamp;
+    7. Contract cannot sell tokens above hard cap;
+    8. Project owner must be able to withdraw collected ETH only after the crowdsale completed successfully and only to the fundingAddress provided in start();
+    9. If the crowdsale failed or cancelled, all participants should have an ability to refund their ETH;
+
+
+### Specification 
 
 Custom crowdsale contract **must** be derived from `BasicCrowdsale` contract which, in turn, is derived from `ICrowdsaleProcessor` which, in turn, is derived from `Ownable` (from zeppelin-solidity library) and `HasManager` contracts.
 
@@ -107,7 +126,7 @@ Custom crowdsale contract **must** be derived from `BasicCrowdsale` contract whi
 
 `BasicCrowdsale` ([see src](https://github.com/WingsDao/3rd-party-integration/blob/master/BasicCrowdsale.sol)) implements default behavior of custom crowdsale, but BasicCrowdsale.start(...) and BasicCrowdsale.stop() functions **must** be called (via `super` mechanism) if appropriate methods are overriden in derived contracts.
 
-### Ownable fields
+#### Ownable fields
 
 **owner**
 ```cs
@@ -118,7 +137,7 @@ Owner's address. Allows to make certain methods callbable by owner only (via `on
 <br>
 <br>
 
-### HasManager fields
+#### HasManager fields
 
 **manager**
 ```cs
@@ -129,7 +148,7 @@ Manager's address. Allows to make certain methods callbable by manager only (via
 <br>
 <br>
 
-### ICrowdsaleProcessor fields
+#### ICrowdsaleProcessor fields
 
 **started**
 ```cs
@@ -204,7 +223,7 @@ End timestamp of crowdsale, absolute UTC time
 <br>
 <br>
 
-### Ownable methods
+#### Ownable methods
 
 **transferOwnership**
 ```cs
@@ -215,7 +234,7 @@ Allows the current owner to transfer control of the contract to a newOwner.
 <br>
 <br>
 
-### HasManager methods
+#### HasManager methods
 
 **transferManager**
 ```cs
@@ -226,7 +245,7 @@ New manager transfers its functions to new address.
 <br>
 <br>
 
-### ICrowdsaleProcessor methods
+#### ICrowdsaleProcessor methods
 
 **deposit**
 ```cs
@@ -309,7 +328,7 @@ Is crowdsale completed successfully.
 <br>
 <br>
 
-## Step By Step
+##ß Step By Step
 
 ## Tests
 
