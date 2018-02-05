@@ -1,4 +1,4 @@
-# Wings Crowdsale Integration
+# Wings Crowdsale Integration v0.1
 
 Wings is platform for evaluating and do ICO. Based on Ethereum smart contracts and IPFS.
 
@@ -7,7 +7,6 @@ or by writing own crowdsale contract integrated with Wings.
 
 ## Overview
 
-## Motivation
 
 ## Security
 
@@ -20,6 +19,8 @@ even security issues in our smart contracts.
 If you reached security issues or any other issues, please, contact us by issues or sending us email: [support@wings.ai](mailto:support@wings.ai), we have generous bounties, read more [here](https://blog.wings.ai).
 
 ## Help
+
+If during integration you need help, we strongly recommend to contact us by email [support@wings.ai] or [telegram chat](https://telegram.me/wingschat), or directly contact [contributors](#contributors).
 
 ## Installation
     
@@ -263,7 +264,7 @@ Is crowdsale completed successfully.
 
 ## Examples
 
-## Developers
+## Contributors
 
 + [Artem Gorbachev](mailto:artem@wings.ai)
 + [Boris Povod](mailto:boris@wings.ai)
