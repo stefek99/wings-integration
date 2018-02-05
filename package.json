@@ -1,5 +1,5 @@
 {
-  "name": "3rd-party-integration",
+  "name": "wings-integration",
   "version": "1.0.0",
   "description": "Wings 3rd party integration contracts",
   "main": "index.js",

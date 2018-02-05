@@ -19,7 +19,7 @@ If you reached security issues or any other issues, please, contact us by issues
 
 ## Help
 
-If during integration you need help, we strongly recommend to contact us by email [support@wings.ai] or [telegram chat](https://telegram.me/wingschat), or directly contact [contributors](#contributors).
+If during integration you need help, we strongly recommend to contact us by email [support@wings.ai](mailto:support@wings.ai) or [telegram chat](https://telegram.me/wingschat), or directly contact [contributors](#contributors).
 
 ## Overview
 
@@ -30,7 +30,7 @@ Integration can be divided in few steps:
 
 1. Development of crowdsale smart contract
 2. Integration of Wings smart contracts
-3. Creation of a project with custom crowdsale contract on [Wings Platform](https://testnet.wings.ai) UI
+3. Creation of a project with custom crowdsale contract on [Wings Platform](https://testnet.wings.ai)(via UI or manually)
 4. After forecasting successful done, start of custom crowdsale contract and crowdsale (via Wings Platform UI or manually)
 
 This documentation describing only 1 step (indeed integration), about other parts read our blog [post](https://blog.wings.ai).
@@ -40,11 +40,39 @@ that he has to implement to be sure that his smart contract works fine and can b
 
 If developer doesn't follow rules it can produce bugs and issues, include financial losses.
 
+## Requirements
+
+- Node.js v8
+- truffle 4.0.6
+- testrpc
+
 ## Getting Started
 
+To get started install our package using npm:
 
+    npm install wings-integration --save
 
-## Specs
+Once package installed, you can import our BasicCrowdsale.sol contract to your smart contract.
+
+Like:
+
+```cs
+import 'wings-integration/contracts/BasicCrowdsale.sol';
+```
+
+And then starting inheritance of BasicCrowdsale to your contract:
+
+```cs
+contract MyCrowdsale is BasicCrowdsale {
+    ...
+}
+```
+
+Now read [specification](#specification) before start implementation of your crowdsale smart contract.
+ 
+If specification is not enough, we offer [step by step](#step-by-step) guide in additional.
+
+## Specification
 
 Project owner should provide 2 contracts:
 + Token contract that complies to ERC20 specification and does exactly what it’s intended for. Also note that during the crowdfunding process token values should be somewhat produced ("minted" as in the example) or transferred ("sold") to the buyer's account from some special account;
@@ -280,6 +308,14 @@ Is crowdsale completed successfully.
 <br>
 <br>
 <br>
+
+## Step By Step
+
+## Tests
+
+To launch tests put:
+
+    npm test
 
 ## Contributors
 
