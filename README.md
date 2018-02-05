@@ -1,4 +1,4 @@
-# Wings Crowdsale Integration v0.1
+# Wings Crowdsale Integration
 
 Wings is platform for evaluating and do ICO. Based on Ethereum smart contracts and IPFS.
 
