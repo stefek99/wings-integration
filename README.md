@@ -5,8 +5,7 @@ Wings is platform for evaluating and do ICO. Based on Ethereum smart contracts a
 With Wings any ICO can pass evaluating procedure and launch ICO via Wings ICO constructor
 or by writing own crowdsale contract integrated with Wings.
 
-## Overview
-
+To get more details read our [whitepaper](https://wingsfoundation.ch/docs/WINGS_Whitepaper_V1.1.2_en.pdf), visit [site](https://wings.ai), or join our [chat](https://telegram.me/wingschat) to talk.
 
 ## Security
 
@@ -22,10 +21,30 @@ If you reached security issues or any other issues, please, contact us by issues
 
 If during integration you need help, we strongly recommend to contact us by email [support@wings.ai] or [telegram chat](https://telegram.me/wingschat), or directly contact [contributors](#contributors).
 
-## Installation
-    
+## Overview
 
-## Getting Started 
+To be able to participate in Wings ecosystem project that going to create his own crowdsale smart contract
+should use current documentation as start point of integration to Wings rewards contracts.
+
+Integration can be divided in few steps:
+
+1. Development of crowdsale smart contract
+2. Integration of Wings smart contracts
+3. Creation of a project with custom crowdsale contract on [Wings Platform](https://testnet.wings.ai) UI
+4. After forecasting successful done, start of custom crowdsale contract and crowdsale (via Wings Platform UI or manually)
+
+This documentation describing only 1 step (indeed integration), about other parts read our blog [post](https://blog.wings.ai).
+
+During integration developer of smart contract should follow rules described in current document, and understand dependencies
+that he has to implement to be sure that his smart contract works fine and can be integrated at all.
+
+If developer doesn't follow rules it can produce bugs and issues, include financial losses.
+
+## Getting Started
+
+
+
+## Specs
 
 Project owner should provide 2 contracts:
 + Token contract that complies to ERC20 specification and does exactly what it’s intended for. Also note that during the crowdfunding process token values should be somewhat produced ("minted" as in the example) or transferred ("sold") to the buyer's account from some special account;
@@ -261,8 +280,6 @@ Is crowdsale completed successfully.
 <br>
 <br>
 <br>
-
-## Examples
 
 ## Contributors
 
