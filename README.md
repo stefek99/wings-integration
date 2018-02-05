@@ -103,7 +103,7 @@ In additional should be sure, that:
 + Crowdsale contract could be stopped by crowdsale contract creator
 + Crowdsale contract should be able to distribute rewards after crowdsale successful over (see **mintETHRewards** and **mintTokensRewards** functions)
 
-For more detailed requirements, see the [custom crowdsale review checklist](https://github.com/WingsDao/3rd-party-integration/blob/master/custom-crowdsale-review-checklist.txt):
+For more detailed requirements, see the custom crowdsale review checklist:
 
     While writing or reviewing custom Crowdsale contracts, please meet the following requirements:
     
@@ -328,7 +328,28 @@ Is crowdsale completed successfully.
 <br>
 <br>
 
-##ß Step By Step
+In case you don't feel provided functional enough, you can override functions, for example,
+overriding of isFailed/isActive/isSuccessful could be good idea in case you have another
+standards of states of your ICO. 
+
+But for such complex things we strongly recommending to cover project with tests,
+and contact Wings team for [help](#help).
+
+## Step By Step
+
+Let's do custom crowdsale contract step by step and integrate it to Wings.
+
+We will do Crowdsale contract that works only with whitelisted addresses (or addresses
+passed KYC), as Wings by default doesn't support such functional from box.
+
+First let's just prepare contract that will contains all whitelisted addresses added by contract
+owner:
+
+
+And now let's start doing our crowdsale contract, we will have fixed price, 100 tokens per 1 ETH
+and token contains 18 decimals.
+
+
 
 ## Tests
 
