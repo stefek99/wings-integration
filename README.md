@@ -1,5 +1,7 @@
 # Wings Crowdsale Integration
 
+[![NPM](https://nodei.co/npm/wings-integration.png)](https://npmjs.org/package/wings-integration)
+
 Wings is platform for evaluating and do ICO. Based on Ethereum smart contracts and IPFS.
 
 With Wings any ICO can pass evaluating procedure and launch ICO via Wings ICO constructor
