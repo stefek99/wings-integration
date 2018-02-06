@@ -7,6 +7,20 @@ or by writing own crowdsale contract integrated with Wings.
 
 To get more details read our [whitepaper](https://wingsfoundation.ch/docs/WINGS_Whitepaper_V1.1.2_en.pdf), visit [site](https://wings.ai), or join our [chat](https://telegram.me/wingschat) to talk.
 
+## Content
+
+- [Security](#security)
+- [Help](#help)
+- [Overview](#overview)
+- [Requirements](#requirements)
+- [Getting Started](#getting-started)
+- [Integration](#integration)
+- [Specification](#specification)
+- [Step By Step Guide](#step-by-step)
+- [Tests](#tests)
+- [Contributors](#contributors)
+- [License](#license)
+
 ## Security
 
 Need to understand, that this is work in progress. Remember that you still work with real money, and any issue can lead to financial losses.
