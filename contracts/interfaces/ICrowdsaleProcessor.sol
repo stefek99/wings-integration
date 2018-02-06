@@ -80,7 +80,7 @@ contract ICrowdsaleProcessor is Ownable, HasManager {
   function deposit() public payable {}
 
   // Returns address of crowdsale token, must be ERC20 compilant
-  function token() public returns(address);
+  function getToken() public returns(address);
 
   // Transfers ETH rewards amount (if ETH rewards is configured) to Forecasting contract
   function mintETHRewards(address _contract, uint256 _amount) public onlyManager();
