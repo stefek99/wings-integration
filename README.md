@@ -340,16 +340,216 @@ and contact Wings team for [help](#help).
 Let's do custom crowdsale contract step by step and integrate it to Wings.
 
 We will do Crowdsale contract that works only with whitelisted addresses (or addresses
-passed KYC), as Wings by default doesn't support such functional from box.
+passed KYC), as Wings by default doesn't support such functional "from the box".
 
 First let's just prepare contract that will contains all whitelisted addresses added by contract
-owner:
+owner.
+
+So we create another [truffle](https://github.com/trufflesuite/truffle) project, adding there 
+`wings-integration` and [zeppelin-solidity](https://github.com/OpenZeppelin/zeppelin-solidity).
+
+```cs
+npm i wings-integration --save
+npm i zeppelin-solidity --save
+```
+
+So now let's code whitelist contract.
+
+pragma solidity 0.4.18;
+
+```cs
+import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
+
+contract Whitelist is Ownable {
+  event APPROVE(address indexed approved);
+  event DECLINE(address indexed declined);
+
+  mapping(address => bool) list;
+
+  function Whitelist() {
+    owner = msg.sender;
+  }
+
+  function addAddress(address _participant) public onlyOwner {
+    require(!list[_participant]);
+
+    list[_participant] = true;
+  }
+
+  function declineAddress(address _participant) public onlyOwner {
+    require(list[_participant]);
+
+    list[_participant] = false;
+  }
+
+  function isApproved(address _participant) public view returns (bool) {
+    return list[_participant];
+  }
+}
+```
+
+And we make a token contract, that can issue new tokens. 
+Let's take one from example directory:
+
+```cs
+pragma solidity 0.4.18;
+
+import "zeppelin-solidity/contracts/token/StandardToken.sol";
+import "zeppelin-solidity/contracts/ownership/Ownable.sol";
+
+// Minimal crowdsale token for custom contracts
+contract Token is Ownable, StandardToken {
+    // ERC20 requirements
+    string public name;
+    string public symbol;
+    uint8 public decimals;
+
+    // how many tokens was created (i.e. minted)
+    uint256 public totalSupply;
+
+    // here are 2 states: mintable (initial) and transferrable
+    bool public releasedForTransfer;
+
+    // Ctor. Hardcodes names in this example
+    function CustomTokenExample() public {
+        name = "CustomTokenExample";
+        symbol = "CTE";
+        decimals = 18;
+    }
+
+// override these 2 functions to prevent from transferring tokens before it was released
+
+    function transfer(address _to, uint256 _value) public returns (bool) {
+        require(releasedForTransfer);
+        return super.transfer(_to, _value);
+    }
+
+    function transferFrom(address _from, address _to, uint256 _value) public returns (bool) {
+        require(releasedForTransfer);
+        return super.transferFrom(_from, _to, _value);
+    }
+
+    // transfer the state from intable to transferrable
+    function release() public
+        onlyOwner() // only owner can do it
+    {
+        releasedForTransfer = true;
+    }
+
+    // creates new amount of the token from a thin air
+    function issue(address _recepient, uint256 _amount) public
+        onlyOwner() // only owner can do it
+    {
+        // the owner can mint until released
+        require (!releasedForTransfer);
+
+        // total token supply increases here.
+        // Note that the recepient is not able to transfer anything until release() is called
+        balances[_recepient] += _amount;
+        totalSupply += _amount;
+    }
+}
+```
+
+So we have 18 decimals, `issue` function that allows to issue new tokens, `release` function that
+allows to move tokens after crowdsale.
+
+And now let's start doing our crowdsale contract, we will have fixed price, 100 tokens per 1 ETH, 
+and 100 ETH minimal goal, 1000 ETH hard cap, means our crowdsale is successful if we collect 100 ETH.
+If we collect 1000 ETH, crowdsale closed by hard cap.
+
+```cs
+pragma solidity 0.4.18;
+
+import 'wings-integration/contracts/BasicCrowdsale.sol';
+import './Whitelist.sol';
+import './Token.sol';
+
+contract Crowdsale is BasicCrowdsale {
+    ...
+}
+```
+
+Let's add token and whitelist instances:
 
 
-And now let's start doing our crowdsale contract, we will have fixed price, 100 tokens per 1 ETH
-and token contains 18 decimals.
+```cs
+  Whitelist public whitelist; // initialize whitelist
+  Token public token; // initial token
+```
 
+And make constructor:
 
+```cs
+function Crowdsale(address _whitelist, address _fundingAddress) BasicCrowdsale(msg.sender, msg.sender) {
+    minimalGoal = 1000 eth; // minimal goal
+    hardCap = 100000 eth; // hard cap
+
+    whitelist = Whitelist(_whitelist); // initialize whitelist by address
+    token = new Token(); // create token
+
+    fundingAddress = _fundingAddress; // address where to withdraw ETH
+}
+```
+
+So as you see we initialize whitelist by address, because whitelist can be deployed in the past,
+and managed not by our crowdsale contract. 
+
+In same time token issued by Crowdsale contract, so Crowdsale contract is able to issue new tokens for
+participants. 
+
+Don't forget about funding address, where you can withdraw ETH later.
+
+Let's do functions that allow to exchange sent ETH to contract to tokens:
+
+```cs
+// accept ETH by this contract
+function() payable {
+    require(msg.value > 0);
+    participate(msg.value, msg.sender); // issue tokens
+}
+    
+function participate(uint256 _amount, address _participant) internal
+    hasStarted() hasntStopped() whenCrowdsaleAlive()  // check crowdsale started, hasnt stopped and alive
+{
+    require(whitelist.isApproved(_participant)); // check whitelist
+    
+    uint256 newTotalCollected = totalCollected + _value;
+    
+    if (hardCap < newTotalCollected) {
+     // don't sell anything above the hard cap
+    
+     uint256 refund = newTotalCollected - hardCap;
+     uint256 diff = _value - refund;
+    
+     // send the ETH part which exceeds the hard cap back to the buyer
+     _recepient.transfer(refund);
+     _value = diff;
+    }
+    
+    // token amount as per price (fixed in this example)
+    uint256 tokensSold = _value * tokensPerEthPrice;
+    
+    // create new tokens for this buyer
+    crowdsaleToken.issue(_recepient, tokensSold);
+    
+    // remember the buyer so he/she/it may refund its ETH if crowdsale failed
+    participants[_recepient] += _value;
+    
+    // update total ETH collected
+    totalCollected += _value;
+    
+    // update totel tokens sold
+    totalSold += tokensSold;
+}
+```
+
+See how we added check is participant address whitelisted or no, and in same time see
+how important to follow tokensSold, totalCollected to be updated.
+
+In same time it's important to keep state of contracts right, it's possible to participate in
+ crowdsale only if crowdsale started, hasnt stopped, and alive (see modifiers for participate function).
+ 
 
 ## Tests
 
