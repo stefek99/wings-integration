@@ -396,7 +396,7 @@ Let's take one from example directory:
 ```cs
 pragma solidity 0.4.18;
 
-import "zeppelin-solidity/contracts/token/StandardToken.sol";
+import "zeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
 import "zeppelin-solidity/contracts/ownership/Ownable.sol";
 
 // Minimal crowdsale token for custom contracts
@@ -413,7 +413,7 @@ contract Token is Ownable, StandardToken {
     bool public releasedForTransfer;
 
     // Ctor. Hardcodes names in this example
-    function CustomTokenExample() public {
+    function Token() public {
         name = "CustomTokenExample";
         symbol = "CTE";
         decimals = 18;
