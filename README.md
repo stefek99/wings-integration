@@ -69,7 +69,7 @@ contract MyCrowdsale is BasicCrowdsale {
 ```
 
 Now read [specification](#integration) before start implementation of your crowdsale smart contract.
- 
+
 If specification is not enough, we offer [step by step](#step-by-step) guide in additional.
 
 ## Integration
@@ -106,7 +106,7 @@ In additional should be sure, that:
 For more detailed requirements, see the custom crowdsale review checklist:
 
     While writing or reviewing custom Crowdsale contracts, please meet the following requirements:
-    
+
     1. The contract has to be written in Solidity language and derive directly from BasicCrowdsale;
     2. If stop() is overriden by derived contract then super.stop(...) (i.e BasicCrowdsale.stop()) must be called inside;
     3. If start() is overriden by derived contract then super.start(...) (i.e BasicCrowdsale.start()) must be called inside;
@@ -118,7 +118,7 @@ For more detailed requirements, see the custom crowdsale review checklist:
     9. If the crowdsale failed or cancelled, all participants should have an ability to refund their ETH;
 
 
-### Specification 
+### Specification
 
 Custom crowdsale contract **must** be derived from `BasicCrowdsale` contract which, in turn, is derived from `ICrowdsaleProcessor` which, in turn, is derived from `Ownable` (from zeppelin-solidity library) and `HasManager` contracts.
 
@@ -255,9 +255,9 @@ Allows to transfer some ETH into the contract without selling tokens.
 <br>
 <br>
 <br>
-**token**
+**getToken**
 ```cs
-function token() public returns(address);
+function getToken() public returns(address);
 ```
 Returns address of crowdsale token.
 <br>
@@ -330,7 +330,7 @@ Is crowdsale completed successfully.
 
 In case you don't feel provided functional enough, you can override functions, for example,
 overriding of isFailed/isActive/isSuccessful could be good idea in case you have another
-standards of states of your ICO. 
+standards of states of your ICO.
 
 But for such complex things we strongly recommending to cover project with tests,
 and contact Wings team for [help](#help).
@@ -345,7 +345,7 @@ passed KYC), as Wings by default doesn't support such functional "from the box".
 First let's just prepare contract that will contains all whitelisted addresses added by contract
 owner.
 
-So we create another [truffle](https://github.com/trufflesuite/truffle) project, adding there 
+So we create another [truffle](https://github.com/trufflesuite/truffle) project, adding there
 `wings-integration` and [zeppelin-solidity](https://github.com/OpenZeppelin/zeppelin-solidity).
 
 ```cs
@@ -390,7 +390,7 @@ contract Whitelist is Ownable {
 }
 ```
 
-And we make a token contract, that can issue new tokens. 
+And we make a token contract, that can issue new tokens.
 Let's take one from example directory:
 
 ```cs
@@ -456,7 +456,7 @@ contract Token is Ownable, StandardToken {
 So we have 18 decimals, `issue` function that allows to issue new tokens, `release` function that
 allows to move tokens after crowdsale.
 
-And now let's start doing our crowdsale contract, we will have fixed price, 100 tokens per 1 ETH, 
+And now let's start doing our crowdsale contract, we will have fixed price, 100 tokens per 1 ETH,
 and 100 ETH minimal goal, 1000 ETH hard cap, means our crowdsale is successful if we collect 100 ETH.
 If we collect 1000 ETH, crowdsale closed by hard cap.
 
@@ -499,10 +499,10 @@ function Crowdsale(address _whitelist, address _fundingAddress) BasicCrowdsale(m
 ```
 
 So as you see we initialize whitelist by address, because whitelist can be deployed in the past,
-and managed not by our crowdsale contract. 
+and managed not by our crowdsale contract.
 
 In same time token issued by Crowdsale contract, so Crowdsale contract is able to issue new tokens for
-participants. 
+participants.
 
 Don't forget about funding address, where you can withdraw ETH later.
 
@@ -514,7 +514,7 @@ function() payable {
     require(msg.value > 0);
     participate(msg.value, msg.sender); // issue tokens
 }
-    
+
 function participate(uint256 _value, address _recepient) internal
     hasBeenStarted() hasntStopped() whenCrowdsaleAlive()  // check crowdsale started, hasnt stopped and alive
 {
@@ -555,7 +555,7 @@ how important to follow tokensSold, totalCollected to be updated.
 
 In same time it's important to keep state of contracts right, it's possible to participate in
  crowdsale only if crowdsale started, hasnt stopped, and alive (see modifiers for participate function).
- 
+
 And now we miss only few latest functions, indeed:
 
 - Function that allows to get token addfress
@@ -637,13 +637,13 @@ function refund()
 }
 ```
 
-In nutshell, we transfer collected ETH to funding address by call `withdraw` function, 
+In nutshell, we transfer collected ETH to funding address by call `withdraw` function,
 in same time.
 
 Refund implemented by `refund` function, that anyone can call if crowdsale stopped or failed.
 
 After all, we are getting integrated crowdsale contract, that can work with Wings smart contracts
-ecosystem fine. 
+ecosystem fine.
 
 Latest thing that we have to do is:
 
@@ -656,7 +656,7 @@ More detailed instruction about creation project and other iterations with Platf
 
 ## Tests
 
-// TODO: move part of test to current repository 
+// TODO: move part of test to current repository
 
 ## Contributors
 
