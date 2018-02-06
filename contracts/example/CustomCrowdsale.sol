@@ -36,7 +36,7 @@ contract CustomCrowdsale is BasicCrowdsale {
 // Here goes ICrowdsaleProcessor implementation
 
   // returns address of crowdsale token. The token must be ERC20-compliant
-  function token()
+  function getToken()
     public
     returns(address)
   {
