@@ -355,9 +355,9 @@ npm i zeppelin-solidity --save
 
 So now let's code whitelist contract.
 
+```cs
 pragma solidity 0.4.18;
 
-```cs
 import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 
 contract Whitelist is Ownable {
@@ -374,12 +374,14 @@ contract Whitelist is Ownable {
     require(!list[_participant]);
 
     list[_participant] = true;
+    APPROVE(_participant);
   }
 
   function declineAddress(address _participant) public onlyOwner {
     require(list[_participant]);
 
     list[_participant] = false;
+    DECLINE(_participant);
   }
 
   function isApproved(address _participant) public view returns (bool) {
@@ -474,19 +476,23 @@ Let's add token and whitelist instances:
 
 
 ```cs
-  Whitelist public whitelist; // initialize whitelist
-  Token public token; // initial token
+Whitelist public whitelist; // initialize whitelist
+Token public crowdsaleToken; // initial token
+
+uint256 public price = 100; // price for one ETH
+
+mapping(address => uint256) participants; // list of participants
 ```
 
 And make constructor:
 
 ```cs
 function Crowdsale(address _whitelist, address _fundingAddress) BasicCrowdsale(msg.sender, msg.sender) {
-    minimalGoal = 1000 eth; // minimal goal
-    hardCap = 100000 eth; // hard cap
+    minimalGoal = 100 ether; // minimal goal
+    hardCap = 1000 ether; // hard cap
 
     whitelist = Whitelist(_whitelist); // initialize whitelist by address
-    token = new Token(); // create token
+    crowdsaleToken = new Token(); // create token
 
     fundingAddress = _fundingAddress; // address where to withdraw ETH
 }
@@ -509,38 +515,38 @@ function() payable {
     participate(msg.value, msg.sender); // issue tokens
 }
     
-function participate(uint256 _amount, address _participant) internal
-    hasStarted() hasntStopped() whenCrowdsaleAlive()  // check crowdsale started, hasnt stopped and alive
+function participate(uint256 _value, address _recepient) internal
+    hasBeenStarted() hasntStopped() whenCrowdsaleAlive()  // check crowdsale started, hasnt stopped and alive
 {
-    require(whitelist.isApproved(_participant)); // check whitelist
-    
+    require(whitelist.isApproved(_recepient)); // check whitelist
+
     uint256 newTotalCollected = totalCollected + _value;
-    
-    if (hardCap < newTotalCollected) {
+
+   if (hardCap < newTotalCollected) {
      // don't sell anything above the hard cap
-    
+
      uint256 refund = newTotalCollected - hardCap;
      uint256 diff = _value - refund;
-    
+
      // send the ETH part which exceeds the hard cap back to the buyer
      _recepient.transfer(refund);
      _value = diff;
-    }
-    
-    // token amount as per price (fixed in this example)
-    uint256 tokensSold = _value * tokensPerEthPrice;
-    
-    // create new tokens for this buyer
-    crowdsaleToken.issue(_recepient, tokensSold);
-    
-    // remember the buyer so he/she/it may refund its ETH if crowdsale failed
-    participants[_recepient] += _value;
-    
-    // update total ETH collected
-    totalCollected += _value;
-    
-    // update totel tokens sold
-    totalSold += tokensSold;
+   }
+
+   // token amount as per price (fixed in this example)
+   uint256 tokensSold = _value * price;
+
+   // create new tokens for this buyer
+   crowdsaleToken.issue(_recepient, tokensSold);
+
+   // remember the buyer so he/she/it may refund its ETH if crowdsale failed
+   participants[_recepient] += _value;
+
+   // update total ETH collected
+   totalCollected += _value;
+
+   // update totel tokens sold
+   totalSold += tokensSold;
 }
 ```
 
@@ -550,6 +556,103 @@ how important to follow tokensSold, totalCollected to be updated.
 In same time it's important to keep state of contracts right, it's possible to participate in
  crowdsale only if crowdsale started, hasnt stopped, and alive (see modifiers for participate function).
  
+And now we miss only few latest functions, indeed:
+
+- Function that allows to get token addfress
+- Mint of token rewards to token contracts
+- Release token after crowdsale
+
+```cs
+// returns address of crowdsale token. The token must be ERC20-compliant
+function getToken() public returns(address)
+{
+    return crowdsaleToken;
+}
+
+// called by CrowdsaleController to transfer reward part of
+// tokens sold by successful crowdsale to Forecasting contract.
+// This call is made upon closing successful crowdfunding process.
+function mintTokenRewards(
+    address _contract,  // Forecasting contract
+    uint256 _amount     // agreed part of totalSold which is intended for rewards
+)
+    public
+    onlyManager() // manager is CrowdsaleController instance
+{
+    // crowdsale token is mintable in this example, tokens are created here
+    crowdsaleToken.issue(_contract, _amount);
+}
+
+
+// transfers crowdsale token from mintable to transferrable state
+function releaseTokens()
+    public
+    onlyManager()             // manager is CrowdsaleController instance
+    hasntStopped()            // crowdsale wasn't cancelled
+    whenCrowdsaleSuccessful() // crowdsale was successful
+{
+    // see token example
+    crowdsaleToken.release();
+}
+```
+
+Previous functions more technical and allows to mint token rewards for forecasters, get token
+address and allow to release tokens and make them transferable.
+
+**What is important**, is to keep collected ETH on crowfunding contract, to make it possible
+to withdraw forecasters rewards (this is done automatically), but even if developer prefer to keep
+ETH on another address, and transfer ETH once contract receive it, still possible to deposit contract
+with ETH via `deposit` function.
+
+Last few things - withdraw ETH (in case of our contract) and refund (in case of failed crowdsale):
+
+```cs
+// project's owner withdraws ETH funds to the funding address upon successful crowdsale
+function withdraw(
+    uint256 _amount // can be done partially
+)
+    public
+    onlyOwner() // project's owner
+    hasntStopped()  // crowdsale wasn't cancelled
+    whenCrowdsaleSuccessful() // crowdsale completed successfully
+{
+    require(_amount <= this.balance);
+    fundingAddress.transfer(_amount);
+}
+
+  // backers refund their ETH if the crowdsale was cancelled or has failed
+function refund()
+    public
+{
+    // either cancelled or failed
+    require(stopped || isFailed());
+
+    uint256 amount = participants[msg.sender];
+
+    // prevent from doing it twice
+    require(amount > 0);
+    participants[msg.sender] = 0;
+
+    msg.sender.transfer(amount);
+}
+```
+
+In nutshell, we transfer collected ETH to funding address by call `withdraw` function, 
+in same time.
+
+Refund implemented by `refund` function, that anyone can call if crowdsale stopped or failed.
+
+After all, we are getting integrated crowdsale contract, that can work with Wings smart contracts
+ecosystem fine. 
+
+Latest thing that we have to do is:
+
+- Deploy crowdsale
+- Create project on [Wings Platform](https://wings.ai) and provide address of crowdsale contract
+- After forecasting period transfer manager from account you used to deploy crowdsale contract
+to DAO contract address (that created by [Wings Platform](https://wings.ai))
+
+More detailed instruction about creation project and other iterations with Platform/UI see on our [blog](https://blog.wings.ai).
 
 ## Tests
 
