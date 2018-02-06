@@ -656,9 +656,7 @@ More detailed instruction about creation project and other iterations with Platf
 
 ## Tests
 
-To launch tests put:
-
-    npm test
+// TODO: move part of test to current repository 
 
 ## Contributors
 
