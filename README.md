@@ -44,8 +44,8 @@ Integration can be splitted in few steps:
 
 1. Development of crowdsale smart contract
 2. Integration of Wings smart contracts
-3. Creation of a project with custom crowdsale contract on [Wings Platform](https://testnet.wings.ai) (via UI or manually)
-4. After forecasting successful done, start of custom crowdsale contract and crowdsale on [Wings Platform](https://testnet.wings.ai) (via UI or manually)
+3. Creation of a project with custom crowdsale contract on [Wings Platform](https://wings.ai) (via UI or manually)
+4. After forecasting successful done, start of custom crowdsale contract and crowdsale on [Wings Platform](https://wings.ai) (via UI or manually)
 
 This documentation describing only 1 step (indeed integration), about other parts read our blog [post](https://blog.wings.ai).
 
