@@ -92,12 +92,12 @@ If specification is not enough, we offer [step by step](#step-by-step) guide in 
 
 Project owner should provide 2 contracts:
 + Token contract that complies to ERC20 specification and does exactly what it’s intended for. Also note that during the crowdfunding process token values should be somewhat produced ("minted" as in the example) or transferred ("sold") to the buyer's account from some special account;
-+ Custom `Crowdsale` contract which derives from `BasicCrowdsale` contract (see [BasicCrowdsale.sol](https://github.com/WingsDao/3rd-party-integration/blob/master/BasicCrowdsale.sol))
++ Custom `Crowdsale` contract which derives from `BasicCrowdsale` contract (see [BasicCrowdsale.sol](https://github.com/WingsDao/wings-integration/blob/master/contracts/BasicCrowdsale.sol))
 
-Example contracts (see [example](https://github.com/WingsDao/3rd-party-integration/tree/master/example) directory):
-+ [Custom crowdsale contract](https://github.com/WingsDao/3rd-party-integration/blob/master/example/CustomCrowdsale.sol);
-+ [Token example with minting funciton](https://github.com/WingsDao/3rd-party-integration/blob/master/example/CustomTokenExample.sol)
-+ [Token example which is compatible to Bancor's smart token interface](https://github.com/WingsDao/3rd-party-integration/blob/master/example/BancorCompatibleTokenExample.sol), see specifications for [Bancor protocol](https://github.com/bancorprotocol/contracts#the-smart-token-standard)
+Example contracts (see [example](https://github.com/WingsDao/wings-integration/tree/master/contracts/example) directory):
++ [Custom crowdsale contract](https://github.com/WingsDao/wings-integration/blob/master/contracts/example/CustomCrowdsale.sol);
++ [Token example with minting funciton](https://github.com/WingsDao/wings-integration/blob/master/contracts/example/CustomTokenExample.sol)
++ [Token example which is compatible to Bancor's smart token interface](https://github.com/WingsDao/wings-integration/blob/master/contracts/example/BancorCompatibleTokenExample.sol), see specifications for [Bancor protocol](https://github.com/bancorprotocol/contracts#the-smart-token-standard)
 
 During its lifetime, `Crowdsale` contract may reside in the following states:
 + Initial state: crowdsale is not yet started;
@@ -108,7 +108,7 @@ During its lifetime, `Crowdsale` contract may reside in the following states:
 
 `Crowdsale` instance is managed by `CrowdsaleController` instance, which is a part of Wings contracts infrastructure.
 
-It’s necessary for custom crowdsale contract to keep in actual state all public fields of [ICrowdsaleProcessor](https://github.com/WingsDao/3rd-party-integration/blob/master/interfaces/ICrowdsaleProcessor.sol) observing the following rules:
+It’s necessary for custom crowdsale contract to keep in actual state all public fields of [ICrowdsaleProcessor](https://github.com/WingsDao/wings-integration/blob/master/contracts/interfaces/ICrowdsaleProcessor.sol) observing the following rules:
 + `totalCollected` and `totalSold` increase during active state;
 + `minimalGoal` and `hardCap` can be changed any number of times before `start()` is called, but not after that;
 + `duration` and timestamps (`startTimestamp` and `endTimestamp`) are set in `start()` function.
@@ -140,7 +140,7 @@ Custom crowdsale contract **must** be derived from `BasicCrowdsale` contract whi
 
 **Difference between owner and manager:** Owner is typically the address of contract creator's account, manager is the address of the contract to which some acrtions are delegated. So effectively crowdsale contracts have 2 owners with different access rights.
 
-`BasicCrowdsale` ([see src](https://github.com/WingsDao/3rd-party-integration/blob/master/BasicCrowdsale.sol)) implements default behavior of custom crowdsale, but BasicCrowdsale.start(...) and BasicCrowdsale.stop() functions **must** be called (via `super` mechanism) if appropriate methods are overriden in derived contracts.
+`BasicCrowdsale` ([see src](https://github.com/WingsDao/wings-integration/blob/master/contracts/BasicCrowdsale.sol)) implements default behavior of custom crowdsale, but BasicCrowdsale.start(...) and BasicCrowdsale.stop() functions **must** be called (via `super` mechanism) if appropriate methods are overriden in derived contracts.
 
 #### Ownable fields
 
