@@ -2,7 +2,7 @@
 
 Wings is a platform for evaluating and conducting ICO's based on Ethereum smart contracts and IPFS.
 
-With Wings any ICO can that passes an evaluation procedure can launch an ICO via the Wings ICO constructor,
+With Wings any ICO that passes an evaluation procedure can launch an ICO via the Wings ICO constructor,
 or by writing its own crowdsale contract and integrateing it with Wings.
 
 To get more details read our [whitepaper](https://wingsfoundation.ch/docs/WINGS_Whitepaper_V1.1.2_en.pdf), visit [site](https://wings.ai), or join our [chat](https://telegram.me/wingschat).
