@@ -66,9 +66,9 @@ contract MyCrowdsale is BasicCrowdsale {
 }
 ```
 
-Now read [specification](#integration) before start the implementation of your crowdsale smart contract.
+Now read [specification](#integration) before starting the implementation of your crowdsale smart contract.
 
-If specifications are not enough, we offer a [step by step](#step-by-step) guide in addition.
+in addition to specification, we offer a [step by step](#step-by-step) guide.
 
 ## Integration
 
