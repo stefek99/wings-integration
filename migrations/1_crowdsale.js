@@ -16,6 +16,8 @@ module.exports = async (deployer) => {
     await deployer.deploy(CustomCrowdsale, web3.toWei(1000, 'ether'), web3.toWei(50000, 'ether'), 1000, token.address)
     const crowdsale = await CustomCrowdsale.deployed()
 
+    await token.transferOwnership(crowdsale.address)
+
     console.log(`===== Contracts ====`)
     console.log(`Crowdsale: ${crowdsale.address}`)
     console.log(`Token: ${token.address}`)
