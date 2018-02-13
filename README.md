@@ -673,6 +673,14 @@ For more detailed instruction about project creation and other iterations of the
 + [Artem Gorbachev](mailto:artem@wings.ai)
 + [Boris Povod](mailto:boris@wings.ai)
 
+## Running migrations
+
+Only example of deployment of custom crowdsale and custom token from examples folder:
+
+    CROWDSALE=1 truffle migrate -f 1
+
+Write you own for your custom crowdsale/token.
+
 ## License
 
 [GPL v3.0 License](LICENSE).
