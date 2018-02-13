@@ -1,6 +1,6 @@
 {
   "name": "wings-integration",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Wings 3rd party integration contracts",
   "main": "index.js",
   "directories": {
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/WingsDao/3rd-party-integration.git"
+    "url": "git+https://github.com/WingsDao/wings-integration.git"
   },
   "author": "Wings Stiftung",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
-    "url": "https://github.com/WingsDao/3rd-party-integration/issues"
+    "url": "https://github.com/WingsDao/wings-integration/issues"
   },
-  "homepage": "https://github.com/WingsDao/3rd-party-integration#readme",
+  "homepage": "https://github.com/WingsDao/wings-integration#readme",
   "dependencies": {
     "truffle": "^4.0.6",
     "zeppelin-solidity": "^1.6.0"

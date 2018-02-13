@@ -3,6 +3,8 @@ import "./CustomTokenExample.sol";
 
 // Bancor's ISmartToken compatible token example
 // See the specs at https://github.com/bancorprotocol/contracts#the-smart-token-standard
+// IMPORTANT!!!: DON'T FORGET TO ADD TO YOUR CROWDSALE CONTRACT ABILITY TO TRANSFER OWNERSHIP FROM CROWDSALE CONTRACT BACK TO
+// YOU IN CASE OF BANCOR SMART CONTRACT
 contract BancorCompatibleTokenExample is CustomTokenExample {
     // Triggered when a smart token is deployed.
     event NewSmartToken(address _token);
