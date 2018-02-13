@@ -1,6 +1,6 @@
 {
   "name": "wings-integration",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Wings 3rd party integration contracts",
   "main": "index.js",
   "directories": {
