@@ -110,7 +110,7 @@ It’s necessary for custom crowdsale contract to keep in its actual state all p
 
 + `totalCollected` and `totalSold` increase during active state;
 + `minimalGoal` and `hardCap` can be changed any number of times before `start()` is called, but not after that;
-+ `duration` and timestamps (`startTimestamp` and `endTimestamp`) are set in `start()` function.
++ `duration`, timestamps (`startTimestamp` and `endTimestamp`), `fundingAddress` are set in `start()` function.
 
 In addition, be sure, that:
 + Crowdsale contract should start within 30 days after forecasting completed
@@ -519,7 +519,7 @@ and is not managed by our crowdsale contract.
 At the same time, a token is issued by Crowdsale contract, so that a Crowdsale contract is able to issue new tokens for
 participants.
 
-Do not forget about the funding address, where you can withdraw ETH later.
+Do not forget about the funding address, where you can withdraw ETH later, you can change funding address on call of `start` method of smart contract.
 
 Let's do functions that allow us to exchange ETH sent to the contract to tokens:
 
