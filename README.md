@@ -1,8 +1,8 @@
-# Wings Crowdsale Integration
+# WINGS Token Generation Smart Contract Integration 
 
-Wings is a platform for evaluating and conducting ICO's based on Ethereum smart contracts and IPFS.
+WINGS is a platform for curating, evaluating and conducting token generation events (aka ICO, token sale or crowdsales) based on Ethereum smart contracts and IPFS.
 
-With Wings any ICO that passes an evaluation procedure can launch an ICO via the Wings ICO constructor,
+With WINGS any ICO that passes a community-based evaluation procedure can launch an ICO via the WINGS ICO constructor,
 or by writing its own crowdsale contract and integrateing it with Wings.
 
 To get more details read our [whitepaper](https://wingsfoundation.ch/docs/WINGS_Whitepaper_V1.1.2_en.pdf), visit [site](https://wings.ai), or join our [chat](https://telegram.me/wingschat).
