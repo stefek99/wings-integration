@@ -1,9 +1,8 @@
-# WINGS Token Generation Smart Contract Integration 
+# WINGS Forecasting Rewards Smart Contract Programming Interface 
 
-WINGS is a platform for curating, evaluating and conducting token generation events (aka ICO, token sale or crowdsales) based on Ethereum smart contracts and IPFS.
+WINGS is a platform for curating, evaluating, valuing and conducting token generation events (aka ICO, token sale or crowdsale) based on Ethereum smart contracts and IPFS. 
 
-With WINGS any ICO that passes a community-based evaluation procedure can launch an ICO via the WINGS ICO constructor,
-or by writing its own crowdsale contract and integrateing it with Wings.
+With WINGS any proposal that passes a community-based evaluation procedure known as WINGS Curation & Valuation Forecasting can launch a token sales contract via the WINGS ICO constructor, or by writing its own crowdsale contract and integrating it with WINGS. Participating WINGS community members (token holders) who evaluate a project are paid via a smart contracts-based reward algorithm based on the accuracy of their valuation forecast, their WINGS forecast reputation score, how many WINGS they lock into the evaluation and other factors. Importantly, WINGS enables self-regulation for the broader crypto-community of project funders who can be assured that WINGS project evaluators are kept honest via the WINGS protocol, and who therefore can eschew ICOs that have not earned their wings.  
 
 To get more details read our [whitepaper](https://wingsfoundation.ch/docs/WINGS_Whitepaper_V1.1.2_en.pdf), visit [site](https://wings.ai), or join our [chat](https://telegram.me/wingschat).
 
@@ -23,13 +22,13 @@ To get more details read our [whitepaper](https://wingsfoundation.ch/docs/WINGS_
 
 ## Security
 
-Please understand that this project is still a work in progress. Remember that you are dealing with real money and any issue can potentially lead to financial losses.
+This project is still a work in progress. Remember that you are dealing with real virtual money and any issue can potentially lead to financial losses.
 
-We strongly recommend to cover your integration and implementation of the crowdsale contract with tests.
+We strongly recommend for you to assure your integration and implementation of the crowdsale contract with tests.
 
 We take no responsibility for your implementation decisions and any security problem you might experience during integration.
 
-If you encounter any security issues or otherwise related issues, please, contact us by support or send us an email: [support@wings.ai](mailto:support@wings.ai), we have generous bounties, read more [here](https://blog.wings.ai).
+If you encounter any security issues or otherwise related issues, please, contact us via our [telegram chat](https://t.me/wingschat) or send us an email: [support@wings.ai](mailto:support@wings.ai), we have generous bounties, read more [here](https://blog.wings.ai).
 
 ## Help
 
@@ -37,17 +36,17 @@ If you need help during integration, we strongly recommend to contact us by emai
 
 ## Overview
 
-To participate in the Wings ecosystem with a project that is going to create its own crowdsale smart contract
-use this current documentation as start point of integrating with Wings rewards contracts.
+To participate in the WINGS ecosystem with a project that is going to create its own crowdsale smart contract
+use this documentation as a starting point of integrating with WINGS valuation forecasting rewards contracts.
 
 Integration can be split into the following steps:
 
 1. Development of a crowdsale smart contract
-2. Integration of Wings smart contracts
-3. Creation of a project with custom crowdsale contract on the [Wings Platform](https://testnet.wings.ai) (via UI or manually)
-4. After forecasting has successfully concluded, initiating the custom crowdsale contract and crowdsale on the [Wings Platform](https://testnet.wings.ai) (via UI or manually)
+2. Integration of WINGS smart contracts
+3. Creation of a project with custom crowdsale contract on [WINGS](https://testnet.wings.ai) (via UI or manually)
+4. After forecasting has successfully concluded, initiating your custom crowdsale contract and crowdsale on [WINGS](https://testnet.wings.ai) (via UI or manually)
 
-This documentation describes step 1 in depth (integration), for steps 2-4 please visit our blog [post](https://blog.wings.ai).
+This documentation assumes that you have already taken step 1, it describes step 2 in depth (integration), for steps 3-4 please visit our blog [post](https://blog.wings.ai).
 
 During integration the developer of the smart contract should understand their dependencies and follow the rules described in the current document to be absolutely sure their smart contract works correctly.
 If the developer does not follow our rules it can lead to issues which many include financial losses.
@@ -87,7 +86,7 @@ in addition to specification, we offer a [step by step](#step-by-step) guide.
 ## Integration
 
 Project owner should provide 2 contracts:
-+ Token contract that complies to ERC20 specification and does exactly what it is intended for. Also note that during the crowdfunding process token values should be somewhat produced ("minted" as in the example) or transferred ("sold") to the buyer's account from some special account;
++ Token contract that complies to ERC20 specification and does exactly what it is intended for. Also note that during the crowdfunding process token values should be produced ("minted" as in the example) or transferred ("sold") to the buyer's account from some special account;
 + Custom `Crowdsale` contract which derives from `BasicCrowdsale` contract (see [BasicCrowdsale.sol](https://github.com/WingsDao/3rd-party-integration/blob/master/BasicCrowdsale.sol))
 
 
@@ -344,20 +343,20 @@ Is crowdsale completed successfully.
 <br>
 
 If you don't feel this provides enough functionality, you can override functions, for example,
-overriding of isFailed/isActive/isSuccessful could be a good idea in a cases where you have other
+overriding of isFailed/isActive/isSuccessful could be a good idea in cases where you have other
 standards of states of your ICO.
 
 For complex changes we strongly recommend covering your project with tests,
-and contacting the Wings team for [help](#help).
+and contacting the WINGS team for [help](#help).
 
 ## Step By Step
 
-Let's do a custom crowdsale contract step by step and integrate it to Wings.
+Let's do a custom crowdsale contract step by step and integrate it with WINGS.
 
 We will do a Crowdsale contract that works only with whitelisted addresses (or addresses
-passed KYC), as Wings by default does not support such functionality "from the box".
+that passed KYC), as WINGS by default does not support such functionality natively.
 
-First let's just prepare a contract that will contain all whitelisted addresses added by the contract
+First we will prepare a contract that will contain all whitelisted addresses added by the contract
 owner.
 
 So we create another [truffle](https://github.com/trufflesuite/truffle) project, adding there
@@ -368,7 +367,7 @@ npm i wings-integration --save
 npm i zeppelin-solidity --save
 ```
 
-So now let's code the whitelist contract.
+Now let's code the whitelist contract.
 
 ```cs
 pragma solidity 0.4.18;
@@ -405,8 +404,8 @@ contract Whitelist is Ownable {
 }
 ```
 
-And we make a token contract, that can issue new tokens.
-Let's take one from example directory:
+And we need to make a token contract that can issue new tokens.
+Let's take one from the example directory:
 
 ```cs
 pragma solidity 0.4.18;
@@ -468,12 +467,11 @@ contract Token is Ownable, StandardToken {
 }
 ```
 
-So we have 18 decimals, `issue` function that allows you to issue new tokens, `release` function that
-allows you to move tokens after the crowdsale.
+So we have 18 decimals, `issue` function that allows us to issue new tokens, `release` function that
+allows us to move tokens after the crowdsale.
 
-And now lets start our crowdsale contract, we will have fixed price, 100 tokens per 1 ETH,
-and 100 ETH minimal goal, 1000 ETH hard cap, which means our crowdsale is successful if we collect 100 ETH.
-If we collect 1000 ETH, the crowdsale closed by hard cap.
+And now lets start our crowdsale contract where we will have fixed price, 100 tokens per 1 ETH, 100 ETH minimal goal, and 1000 ETH hard cap, which means our crowdsale is successful if we collect 100 ETH.
+If we collect 1000 ETH, the crowdsale is closed by hard cap.
 
 ```cs
 pragma solidity 0.4.18;
@@ -513,15 +511,15 @@ function Crowdsale(address _whitelist, address _fundingAddress) BasicCrowdsale(m
 }
 ```
 
-So as you see we initialize whitelist by address because a whitelist can be deployed in the past 
+So as you see we initialize the whitelist by address because a whitelist can have been deployed in the past 
 and is not managed by our crowdsale contract.
 
-At the same time, a token is issued by Crowdsale contract, so that a Crowdsale contract is able to issue new tokens for
+At the same time, a token is issued by our Crowdsale contract, so that our Crowdsale contract is able to issue new tokens for
 participants.
 
-Do not forget about the funding address, where you can withdraw ETH later, you can change funding address on call of `start` method of smart contract.
+Do not forget about the funding address, where you can withdraw ETH later, you can change the funding address on call of `start` method of the smart contract.
 
-Let's do functions that allow us to exchange ETH sent to the contract to tokens:
+Let's do functions that allow us to exchange ETH sent to the contract for tokens:
 
 ```cs
 // accept ETH by this contract
@@ -565,17 +563,17 @@ function participate(uint256 _value, address _recepient) internal
 }
 ```
 
-Notice how we added a check if the participant address was whitelisted, and at the same time
-how important it is to update tokensSold and totalCollected.
+Notice how we have added a check if the participant address was whitelisted, and at the same time
+the importance of updating tokensSold and totalCollected.
 
 It is important to keep the state of the contracts right, it is possible to participate in
-the crowdsale only if the crowdsale has started, hasnt stopped, and is alive (see modifiers for participate function).
+the crowdsale only if the crowdsale has started, hasn't stopped, and is alive (see modifiers for participate function).
 
-We still need to implement a few more functions to have a working contract, indeed:
+We still need to implement a few more functions to have a working contract, such as:
 
-- Function that allows you to get the token address
-- Mint of token rewards to token contracts
-- Release token after crowdsale
+- Function for getting the token address
+- Minting of token rewards to token contracts
+- Releasing token after crowdsale
 
 ```cs
 // returns address of crowdsale token. The token must be ERC20-compliant
@@ -611,7 +609,7 @@ function releaseTokens()
 }
 ```
 
-Previous functions are more technical and allow you to mint token rewards for forecasters, get the token
+The previous functions are allow you to mint token rewards for the WINGS community evaluation bounty, get the token
 address and allow you to release tokens and make them transferable.
 
 **What is important**, is to keep collected ETH on the crowdfunding contract and to make it possible
@@ -650,17 +648,16 @@ function refund()
     msg.sender.transfer(amount);
 }
 ```
+Then we transfer collected ETH to funding address by calling the `withdraw` function.
 
-In a nutshell, we transfer collected ETH to funding address by call `withdraw` function.
-
-Refund implemented by `refund` function, that anyone can call if crowdsale stopped or failed.
+Refund implemented by the `refund` function, that anyone can call if crowdsale stopped or failed.
 
 The last thing we have to do is:
 
 - Deploy the crowdsale
-- Create a project on [Wings Platform](https://wings.ai) and provide the address of the crowdsale contract
+- Create a project on [WINGS](https://wings.ai) and provide the address of the crowdsale contract
 - After the forecasting period, transfer manager from the account you used to deploy the crowdsale contract
-to the DAO contract address (that was created by [Wings Platform](https://wings.ai))
+to the DAO contract address (that was created by [WINGS](https://wings.ai))
 
 For more detailed instruction about project creation and other iterations of the Platform/UI see on our [blog](https://blog.wings.ai).
 
