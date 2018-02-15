@@ -1,4 +1,4 @@
-# WINGS Forecasting Rewards Smart Contract Programming Interface 
+# WINGS API Specification and Guide for Custom ICO Contracts Integration
 
 WINGS is a platform for curating, evaluating, valuing and conducting token generation events (aka ICO, token sale or crowdsale) based on Ethereum smart contracts and IPFS. 
 
