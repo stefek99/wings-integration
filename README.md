@@ -117,7 +117,9 @@ In addition, be sure, that:
 + Crowdsale contract could be stopped by the crowdsale contract creator
 + Crowdsale contract should be able to distribute rewards after a successful crowdsale is over (see **mintETHRewards** and **mintTokensRewards** functions)
 
-For more detailed requirements, see the custom crowdsale review checklist:
+For more detailed requirements, see the [custom crowdsale review checklist](https://github.com/WingsDao/wings-integration#custom-crowdsale-review-checklist).
+
+## CUSTOM CROWDSALE REVIEW CHECKLIST
 
     While writing or reviewing custom Crowdsale contracts, please meet the following requirements:
 
