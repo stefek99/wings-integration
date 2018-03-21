@@ -148,7 +148,7 @@ Custom crowdsale contract **must** be derived from `BasicCrowdsale` contract whi
 ```cs
 address public owner;
 ```
-Owner's address. Allows for certain methods to be callbable by owner only (via `onlyOwner` modifier)
+Owner's address. Allows for certain methods to be callable by owner only (via `onlyOwner` modifier)
 <br>
 <br>
 <br>
@@ -159,7 +159,7 @@ Owner's address. Allows for certain methods to be callbable by owner only (via `
 ```cs
 address public manager;
 ```
-Manager's address. Allows for certain methods to be callbable by manager only (via `onlyManager` modifier)
+Manager's address. Allows for certain methods to be callable by manager only (via `onlyManager` modifier)
 <br>
 <br>
 <br>
