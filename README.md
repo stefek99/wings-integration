@@ -99,7 +99,7 @@ During its lifetime, the `Crowdsale` contract may reside in the following states
 + Initial state: crowdsale has not yet started;
 + Active state: when everyone is able to buy the project’s tokens (after crowdsale has started);
 + Successful state: when the crowdsale succeeded either by achieving its hard cap or after the crowdsale period ends, with its  collected value being equal or above its minimal goal;
-+ Failed state: when the crowdsale period finishes, but the minimal goal has not been reached *OR* if the project's owner did not manage to start the crowdfunding process within a 30 days period after the forecasting stage finished;
++ Failed state: when the crowdsale period finishes, but the minimal goal has not been reached *OR* if the project's owner did not manage to start the crowdfunding process within the fixed time period,  which is currently 45 days after the forecasting stage finished;
 + Stopped by owner: when the project owner cancels a crowdsale.
 
 `Crowdsale` instance is managed by `CrowdsaleController` instance, which is a part of the WINGS contracts infrastructure.
@@ -112,7 +112,7 @@ It’s necessary for custom crowdsale contract to keep in its actual state all p
 + `duration`, timestamps (`startTimestamp` and `endTimestamp`), `fundingAddress` are set in `start()` function.
 
 In addition, be sure, that:
-+ Crowdsale contract must start within 30 days after forecasting has ended
++ Crowdsale contract must start within the fixed time period, which is currently 45 days
 + Crowdsale contract must have a minimal goal and a hard cap
 + Crowdsale contract can be stopped by the crowdsale contract creator
 + Crowdsale contract must be able to distribute rewards after a successful crowdsale is over (see **mintETHRewards** and **mintTokensRewards** functions)
