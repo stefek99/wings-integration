@@ -23,13 +23,13 @@ We will base our code on Wings Integration repository https://github.com/WingsDa
 It is also available as `npm` package https://www.npmjs.com/package/wings-integration
 
 
-#### Inheritance 
+### Inheritance
 The two most important pieces:
-* `ICrowdsaleProcessor.sol` - it's the interface, it contains name and signature of the methods that you need to implement, you can find this file [here](https://github.com/WingsDao/wings-integration/blob/master/contracts/interfaces/ICrowdsaleProcessor.sol)
-* `BasicCrowdsale.sol` - it's the basic implementation containing some, but not every method required by the `ICrowdsaleProcessor` interface, [here is the file](https://github.com/WingsDao/wings-integration/blob/master/contracts/BasicCrowdsale.sol)
+* [`ICrowdsaleProcessor.sol`](https://github.com/WingsDao/wings-integration/blob/master/contracts/interfaces/ICrowdsaleProcessor.sol) - it's the interface, it contains name and signature of the methods that you need to implement, you can find this file
+* [`BasicCrowdsale.sol`](https://github.com/WingsDao/wings-integration/blob/master/contracts/BasicCrowdsale.sol)) - it's the basic implementation containing some, but not every method required by the `ICrowdsaleProcessor` interface
 
 
-#### ERC20 token
+### ERC20 token
 In our example we will use a custom token based on OpenZeppelin implementation. You have probably seen so many implementations of ERC20 standard, here *(for simplicity)* all the fluff is removed. You can use your own token, as long as it is `ERC20` compatible and you properly implement all methods required by `ICrowdsaleProcessor` interface - it is the essence of Wings integration.
 
 ```
@@ -89,7 +89,7 @@ contract ERC20 {
 ```
 
 
-#### Access modifiers
+### Access modifiers
 `Ownable` and `HasManager` are similar to each other. Just like in real life - you could be either a owner of a restaurant or work in a restaurant as a manager.
 
 ```
@@ -129,7 +129,7 @@ contract HasManager {
 ```
 
 
-#### Custom "MyToken"
+### Custom "MyToken"
 
 Based on the ERC20 we create `MyToken` that will be used for the crowdsale. Note that everytime we `mint` it, we increase the total supply. `MyToken` is `Ownable` which means that only owner can mint.
 
@@ -173,7 +173,7 @@ contract MyToken is ERC20, Ownable {
 }
 ```
 
-#### File structure
+### File structure
 
 We can structure files the following way:
 
@@ -183,23 +183,23 @@ We can structure files the following way:
 
 Another option is to keep everything in the single file - up to you. It's just like discussion about `tabs` and `spaces`. My humble 2 satoshis in this discussion - I prefer 
 
-#### Deployment
+### Deployment
 First we need to deploy the token. For deployment we will use the [Remix IDE](https://remix.ethereum.org/), Metamask (Chrome extenstion) and Ropsten testnet. The biggest advantage of using these tools is that we don't have operate the full node on our machine and deployment is literally one-click process.
 
 If you don't have a Metamask account, you can create one with easy and "buy" test Ether - there is a [faucet](https://faucet.metamask.io/) allowing you to get some test Ether for free. It's very handy and practical when testing your code, you should always deploy to the testnet first (no excuses here).
 
-##### Why not Truffle framework?
+#### Why not Truffle framework?
 
 Many tutorials are using Truffle framework. It's a very sensible choice, it offers handy framework for testing.
 
 However, it's not immediately obvious which Solidity compiler is being used, see [this question on StackOverflow](https://ethereum.stackexchange.com/questions/3256/how-do-i-find-out-the-solidity-compiler-version-i-am-using) and from my own experience it's easier to use combination of Remix and Metamask.
 
 
-#### Deploying the token
+### Deploying the token
 
 We cannot deploy everything all at once, we need to deploy `MyToken` contract first. Then, when deploying `MyCrowdsale` we will pass the `MyToken` contract address to the constructor.
 
-Choose the right contract:
+Choose `MyToken`:
 ![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/remix-dropdown.png)
 
 Confirm in Metamask:
@@ -209,7 +209,7 @@ After few moments *(block confirmation)* you should see:
 
 ![](mytoken-contract-deployed.png)
 
-#### Deploying the crowdsale
+### Deploying the crowdsale
 
 `MyCrowdsale` inherits from `BasicCrowdsale` (that implements some methods) and `ICrowdsaleProcessor`... Now we need to implement the remainder:
 
@@ -300,6 +300,9 @@ contract MyCrowdsale is BasicCrowdsale {
 }
 ```
 
+
+### Constructor parameters
+
 The constructors accepts the following parameters:
 * `uint256 _minimalGoal`
 * `uint256 _hardCap`
@@ -324,7 +327,7 @@ In my instance the complete constructor parameters look like that:
 Once we have a proper construction parameters in place, we can deply `MyCrowdsale`. Metamask will ask for confirmation and after the block is mined we can see the transaction on Ethercan.
 
 
-#### Verification on Etherscan
+### Verification on Etherscan
 
 Once we have token deployed, we can verify source code on Etherscan - that is always the best practice - so that anyone can see the source and verify that we do is right. Note, that **very few people have skill or ability to review the code** and sometimes $150m bugs are left intact for 100+ days. If you don't believe just use your preferred search engine and ask for "parity hack".
 
