@@ -1,3 +1,19 @@
+Year 2017 was revolutionary in terms of mainstread adoption of blockchain technologies. Bicoin, Ethereum and many other altcoins observed a meteoric rise in price and ICO - initial coin offerings - raised more capital than traditional VC *(venture capital)*. 
+
+For many it's a paradigm shift, for me it's one of the many steps on the path of global awakening. People waking up, becoming more resilient, independent, antifragile... Now we don't need to rely on centralized government, we can have independent food, water, energy production. Private schools, private hospitals, private roads, private trains and most importantly - decentralized money.
+
+
+#### DEVELOPER DISCLAIMER
+
+It's not a "Hello World" tutorial. It's the ICO crowdsale. It means there is a serious money on the line. Proceed with caution. Ask for review. Publish your contract upfront - verify on Etherscan so that anyone can see. Hire professional code auditors. I'm not kidding. The additional upside of such approach - potential investors will see that you are taking trust and security matters seriously.
+
+You should always test your smart contract thoroughly and when working in development mode - deploy to your local instance `testrpc` or `testnet` *(Ropsten is one of the most popular options here)*.
+
+#### LEGAL DISCLAIMER
+
+Be cautious about the law. United States of America has some very pecular laws. Even if you are outside the US, never been to US, never intend to go the US - you are still subject to the US laws... And they are "Big Uncle" - with many military bases across the planet. So it is enough that one US citizen sends you some ETH and can land in prison, pretty uncool right?
+
+
 ### Audience
 
 This article is aimed for Solidity smart contract developers.
@@ -5,6 +21,16 @@ This article is aimed for Solidity smart contract developers.
 There are plenty of articles explaing what is blockchain, what is Ethereum, how technology is changing the world.
 
 We will not bore you to death, instead we will present fast, easy and approachable way of integrating Wings forecasting features into your ICO contract.
+
+It's difficult for a single article to be "everything for everyone" but I'll do my best to be approachable, digestable, easy to follow.
+
+Code is the best documentation. I hate to see comments `onlyOwner // only owner` - is that comment meaningful to you in any way? I thought so :) Everything should be self-explanatory. That's the skill of writing code - it's only run by computers, but read and modified by other programmers. The process of typing on the keyboard the characters than end up in the **production code** is maybe 1% of the total development time. All the rest is endless refactoring, testing and making sure that everything works well together.
+
+### Debbugging and error messages
+
+Ethereum ecosystem is changing rapidly. It may happen that a certain command will give you an error message, or I've missed some obvious detail and thing does not work. Please let me know so I can update the tutorial.
+
+You can always do a micro **your-favourite-search-engine-not-namedropping** query and resolve the matter yourself. Or just stick to the common sense and general programming knowledge - you are smart beast! 
 
 
 ### Why use Wings?
@@ -22,11 +48,17 @@ We will base our code on Wings Integration repository https://github.com/WingsDa
 
 It is also available as `npm` package https://www.npmjs.com/package/wings-integration
 
+Or you can just copy-page individual files from GitHub repository. Personally I don't like installing too many dependencies, personally I prefer to keep my code minimal - less code to maintain, less surface for error.
+
 
 ### Inheritance
-The two most important pieces:
+Many programming languages support inheritance. It's a way of saying that `Tesla` is derived from `Vehicle` and we don't have explain explicitly that is has `Wheels`.
+
+*(note that I didn't say `SteeringWheel` because chances are they replace with self-driving component of some futuristic joystick)*
+
+The two pieces of inheritance:
 * [`ICrowdsaleProcessor.sol`](https://github.com/WingsDao/wings-integration/blob/master/contracts/interfaces/ICrowdsaleProcessor.sol) - it's the interface, it contains name and signature of the methods that you need to implement, you can find this file
-* [`BasicCrowdsale.sol`](https://github.com/WingsDao/wings-integration/blob/master/contracts/BasicCrowdsale.sol)) - it's the basic implementation containing some, but not every method required by the `ICrowdsaleProcessor` interface
+* [`BasicCrowdsale.sol`](https://github.com/WingsDao/wings-integration/blob/master/contracts/BasicCrowdsale.sol) - it's the basic implementation containing some, but not every method required by the `ICrowdsaleProcessor` interface
 
 
 ### ERC20 token
@@ -53,7 +85,6 @@ contract ERC20 {
     require(_to != address(0));
     require(_value <= balances[msg.sender]);
 
-    // SafeMath.sub will throw if there is not enough balance.
     balances[msg.sender] = balances[msg.sender].sub(_value);
     balances[_to] = balances[_to].add(_value);
     Transfer(msg.sender, _to, _value);
@@ -88,6 +119,7 @@ contract ERC20 {
 }
 ```
 
+*(simple, minimalistic, implementation of ERC20 token standard directly from OpenZeppelin repository)*
 
 ### Access modifiers
 `Ownable` and `HasManager` are similar to each other. Just like in real life - you could be either a owner of a restaurant or work in a restaurant as a manager.
@@ -128,10 +160,20 @@ contract HasManager {
 }
 ```
 
+You probably noticed that `HasManager` does not have a constructor. It means that we need to set it up in the of the base class, see for example: [`BasicCrowdsale.sol`](https://github.com/WingsDao/wings-integration/blob/master/contracts/BasicCrowdsale.sol)
+
+```
+function BasicCrowdsale(address _owner, address _manager) public {
+  owner = _owner;
+  manager = _manager;
+}
+```
+
+*(you don't have to worry, it is happening automaticallye in the `BasicCrowdsale`)*
 
 ### Custom "MyToken"
 
-Based on the ERC20 we create `MyToken` that will be used for the crowdsale. Note that everytime we `mint` it, we increase the total supply. `MyToken` is `Ownable` which means that only owner can mint.
+Based on the ERC20 we create `MyToken` that will be used for the crowdsale. Note that everytime we `mint` it, we increase the total supply. `MyToken` is `Ownable` - because `mint` function has `onlyOwner()` modifier it means that only owner can mint.
 
 ```
 contract MyToken is ERC20, Ownable {
@@ -181,10 +223,10 @@ We can structure files the following way:
 
 *(because Ethereum ecosystem is evolving very rapidly, chances are the view of Remix IDE will change)*
 
-Another option is to keep everything in the single file - up to you. It's just like discussion about `tabs` and `spaces`. My humble 2 satoshis in this discussion - I prefer 
+Another option is to keep everything in the single file - up to you. It's just like discussion about `tabs` and `spaces`. My humble 2 satoshis in this discussion - do whatever works best for you. Solidity compiler will compile everywthing to EVM (Ethereum Virtual Machine) code anyway.
 
 ### Deployment
-First we need to deploy the token. For deployment we will use the [Remix IDE](https://remix.ethereum.org/), Metamask (Chrome extenstion) and Ropsten testnet. The biggest advantage of using these tools is that we don't have operate the full node on our machine and deployment is literally one-click process.
+First we need to deploy `MyToken`. For deployment we will use the [Remix IDE](https://remix.ethereum.org/), Metamask (Chrome extenstion) and Ropsten testnet. The biggest advantage of using these tools is that we don't have operate the full node on our machine and deployment is literally one-click process.
 
 If you don't have a Metamask account, you can create one with easy and "buy" test Ether - there is a [faucet](https://faucet.metamask.io/) allowing you to get some test Ether for free. It's very handy and practical when testing your code, you should always deploy to the testnet first (no excuses here).
 
@@ -300,6 +342,7 @@ contract MyCrowdsale is BasicCrowdsale {
 }
 ```
 
+I genuinely believe that code is the best documentation and everything should be quite clear. At the same time - it's `0.1` version of this tutorial and we are receiptive to feedback - the end goal is to make it as easy as possible to integrate it!
 
 ### Constructor parameters
 
@@ -309,22 +352,22 @@ The constructors accepts the following parameters:
 * `uint256 _tokensPerEthPrice`
 * `address _token`
 
-Now you should see the importance of creating `MyToken` contract first.
+Now you should see the importance of creating `MyToken` contract first - we will pass `MyToken` contract address to the constructor.
 
+
+#### Big numbers in Solidity and JavaScript
 One thing to keep in mind - Solidity has built-in human readable names such as `ether` or `seconds`, `minutes`, `hours`. You can see more in the docs: http://solidity.readthedocs.io/en/v0.4.21/units-and-global-variables.html
 
-However, when passing `uint256` we will have to use https://etherconverter.online/ for example: `1 ether = 1000000000000000000 wei`
-
+However, when passing `uint256` we will have to use [a converter](https://etherconverter.online/) for example: `1 ether = 1000000000000000000 wei`
 
 Because the number is too big for JavaScript *(we are using Remix IDE in the browser)* we need to put quotes around the number, see [this StackOverflow question](https://ethereum.stackexchange.com/questions/8041/solidity-browser-compiler-error-assertion-failed).
 
 In my instance the complete constructor parameters look like that:
-
 `"10000000000000000000", "100000000000000000000", 1000, "0xcebaf9eee389fd5589194a04801698be41e4bd78"`
 
 *(it will be different in your case because of the `MyToken` contract address)*
 
-Once we have a proper construction parameters in place, we can deply `MyCrowdsale`. Metamask will ask for confirmation and after the block is mined we can see the transaction on Ethercan.
+Once we have a proper construction parameters in place, we can deploy `MyCrowdsale`. Metamask will ask for confirmation and after the block is mined we can see the transaction on Ethercan.
 
 
 ### Verification on Etherscan
@@ -335,14 +378,21 @@ Because we separated our code into a few individual files, for Etherscan verific
 
 You can find the [whole file here](https://github.com/stefek99/wings-integration/blob/master/tutorial/full-tutorial.sol).
 
-
 ### Summary
 
 We deployed our ICO conract that implements `ICrowdsaleProcessor.sol` and therefore making it compatible with Wings DAO.
 
+Now, when using Wings you can select your own crowdsale smart contract. 
+
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/wings-smart-contract-integration.png)
+
+Upon successful creating your Wings campaign forecasters from all around the world will be able to make their predictions about the success of your ICO.
+
+We really wish you well in this journey!
+
 ### Feedback
 
-This is `0.1` version of this tutorial. If there are any discrepancies, rough edges, areas to improve - go ahead and [open an issue on Github](https://github.com/WingsDao/wings-integration/issues), join our community Telegram chat or contact me directly michal@wings.ai or call me directly `+44 758 629 4279` - I am totally aware how frustrating it is - be stuck on a non-working tutorial and I can make a promise to you that I'll do everything in my ability to make your life easier.
+This is `0.1` version of this tutorial. If there are any discrepancies, rough edges, areas to improve - go ahead and [open an issue on Github](https://github.com/WingsDao/wings-integration/issues), join our community Telegram chat or contact me directly michal@wings.ai or call `+44 758 629 4279` - I am totally aware how frustrating it is - be stuck on a non-working tutorial and I can make a promise to you that I'll do everything in my ability to make your life easier.
 
 
 ### Great learning resources for beginners
