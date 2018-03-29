@@ -16,9 +16,7 @@ Be cautious about the law. United States of America has some very pecular laws. 
 
 ### Audience
 
-This article is aimed for Solidity smart contract developers.
-
-There are plenty of articles explaing what is blockchain, what is Ethereum, how technology is changing the world.
+You should have some basic knowledge about Ethereum and programming. There are plenty of articles explaing what is blockchain, what is Ethereum, how technology is changing the world.
 
 We will not bore you to death, instead we will present fast, easy and approachable way of integrating Wings forecasting features into your ICO contract.
 
