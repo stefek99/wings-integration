@@ -41,7 +41,6 @@ Ethereum ecosystem is changing rapidly. It may happen that a certain command wil
 
 You can always do a micro **your-favourite-search-engine-not-namedropping** query and resolve the matter yourself. Or just stick to the common sense and general programming knowledge - you can do it! 
 
-
 ### Core Components of WINGS on Ethereum
 
 WINGS is DAO *(decentralised autonomous organisation)* that curates and evaluates projects, and based on their performance receive service reward payments in the form of ERC20 tokens and Ether.
@@ -55,7 +54,6 @@ WINGS is DAO *(decentralised autonomous organisation)* that curates and evaluate
 #### Evaluator
 ![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/evaluator.png)
 
-
 The main advantages of using WINGS DAO are transparency, crowd AI and decentralized curation.
 
 In order to operate in a fully decentralised way, the ICO contract needs to implement certain methods - in this tutorial we show you step by step what has to be done.
@@ -68,6 +66,14 @@ We will base our code on WINGS Integration repository https://github.com/WingsDa
 It is also available as `npm` package https://www.npmjs.com/package/wings-integration
 
 Or you can just copy-page individual files from GitHub repository. Personally I don't like installing too many dependencies, personally I prefer to keep my code minimal - less code to maintain, less surface for error.
+
+
+#### Other tools we will use
+
+* Solidity - programming language used to create smart contracts
+* [OpenZeppelin](https://github.com/OpenZeppelin/zeppelin-solidity) - collection of great smart contracts
+* [Remix IDE](https://remix.ethereum.org/) - powerful tool for creating Solidity code
+* [Etherscan](https://etherscan.io/) - for veryfying source code of our smart contract
 
 
 ### Inheritance
@@ -272,7 +278,7 @@ After few moments *(block confirmation)* you should see:
 
 ### Deploying the crowdsale
 
-`MyCrowdsale` inherits from `BasicCrowdsale` (that implements some methods) and `ICrowdsaleProcessor`... Now we need to implement the remainder:
+`MyCrowdsale` inherits from `BasicCrowdsale` *(that implements some methods)* and `ICrowdsaleProcessor`... Now we need to implement the remainder:
 
 ```
 contract MyCrowdsale is BasicCrowdsale {
@@ -401,23 +407,31 @@ You can find the [whole file here](https://github.com/stefek99/wings-integration
 
 We deployed our ICO conract that implements `ICrowdsaleProcessor.sol` and therefore making it compatible with WINGS DAO.
 
-Now, when using WINGS you can select your own crowdsale smart contract. 
+Now, we can proceed to WINGS and complete all the required data.
 
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/project-category.png)
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/project-title.png)
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/project-media.png)
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/project-description.png)
 ![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/wings-smart-contract-integration.png)
 
 Upon successful creating your WINGS campaign forecasters from all around the world will be able to make their predictions about the success of your ICO.
 
 We really wish you well in this journey!
 
-### Feedback
+### Feedback and summary
 
-This is `0.1` version of this tutorial. If there are any discrepancies, rough edges, areas to improve - go ahead and [open an issue on Github](https://github.com/WingsDao/wings-integration/issues), join our community Telegram chat or contact me directly michal@wings.ai or call `+44 758 629 4279` - I am totally aware how frustrating it is - be stuck on a non-working tutorial and I can make a promise to you that I'll do everything in my ability to make your life easier.
+If there are any discrepancies, rough edges, areas to improve - go ahead and [open an issue on Github](https://github.com/WingsDao/wings-integration/issues), join our community [Telegram chat](https://telegram.me/wingschat), tweet me [@stefek99](https://twitter.com/stefek99) or contact me directly michal@wings.ai or call `+44 758 629 4279` *(my phone is already public anyway)*
+
+I am totally aware how frustrating it is - be stuck on a non-working tutorial and I can make a promise to you that I'll do everything in my ability to make your life easier.
 
 
-### Great learning resources for beginners
+### Great learning resources
 
 This tutorial assumes some existing Solidity knowledge. If you want to learn basics I highly recommend two great video course explaining everything from scratch.
 
 If you are a beginner to Ethereum, you'll should probably start with much more approachable resources here:
 * https://coursetro.com/courses/20/Developing-Ethereum-Smart-Contracts-for-Beginners
 * https://www.youtube.com/channel/UCaWes1eWQ9TbzA695gl_PtA
+
+Proper credit to these guys, it takes a lot of effort to create quality tutorial!
