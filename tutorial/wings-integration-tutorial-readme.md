@@ -1,12 +1,12 @@
-2017 was revolutionary in terms of mainstream adoption of blockchain technologies. Bicoin, Ethereum and many other altcoins observed a meteoric rise in price and ICOs - initial coin offerings - raised more capital than traditional VC *(venture capital)*. 
+2017 was a revolutionary year in terms of mainstream adoption of blockchain technologies. Bitcoin, Ethereum and many other altcoins observed a meteoric rise in price and ICOs - initial coin offerings - raised more capital than traditional VC *(venture capital)*. 
 
 For many it's a paradigm shift, for me it's one of the many steps on the path of global awakening. People waking up, becoming more resilient, independent, antifragile... Now we don't need to rely on centralized government, we can have independent food, water, energy production. Private schools, private hospitals, private roads, private trains and most importantly - decentralized money, transparency, consensus protocol.
 
-It's no longer Central Banks *(or Federal Reserve)* printing money and financing war or sugar subsidies - this time around it's code, math and cryptography that governs the rules. You can participate in this change in a number of ways - running your own blockchain project or becoming a developer are surely one of the most exciting options.
+It's no longer Central Banks *(or Federal Reserve)* printing money and financing war or sugar subsidies - this time around it is code, math and cryptography that govern the rules. You can participate in this change in a number of ways - running your own blockchain project or becoming a developer are surely one of the most exciting options.
 
 ### Audience
 
-It's difficult for a single article to be "everything for everyone" but I'll do my best to be approachable, digestable, easy to follow.
+It's difficult for a single article to be "everything for everyone" but I'll do my best to be approachable, digestible, easy to follow.
 
 You should have some knowledge about Ethereum and programming. 
 
@@ -16,16 +16,25 @@ This is a [great article about Ethereum](https://medium.com/@preethikasireddy/ho
 
 Time well spent, depending on the priorities. If you need to level up your Ethereum knowledge, there are plenty of resources out there I don't want to distract you with links, instead let's carry on with the essential content of this tutorial.
 
+#### More great learning resources
+
+This tutorial assumes some existing Solidity knowledge. If you want to learn basics I highly recommend two great video course explaining everything from scratch.
+
+If you are a beginner to Ethereum, you should probably start with much more approachable resources here:
+* https://coursetro.com/courses/20/Developing-Ethereum-Smart-Contracts-for-Beginners
+* https://www.youtube.com/channel/UCaWes1eWQ9TbzA695gl_PtA
+
+Proper credit to these guys, it takes a lot of effort to create a proper tutorial! This time around reserve at least a few hours - these are detailed, step by step video tutorials with very decent production quality.
 
 ### It's not "Hello World"...
 
-It's the ICO crowdsale. It means there is serious money on the line. Proceed with caution. Ask for review. Publish your contract upfront *(GitHub and Etherscan)* - verify on Etherscan so that anyone can see. Hire professional auditors. Not kidding. The additional upside of such approach - potential investors will see that you are taking trust and security matters seriously.
+...it's the ICO crowdsale. It means there is serious money on the line. Proceed with caution. Ask for review. Publish your contract upfront *(GitHub and Etherscan)* - verify on Etherscan so that anyone can see. Hire professional auditors. Not kidding. The additional upside of such approach - potential investors will see that you are taking trust and security matters seriously.
 
 You should always test your smart contract thoroughly and when working in development mode - deploy to your local instance `testrpc` or `testnet` *(Ropsten is one of the most popular options here)*.
 
 This tutorial will present an approachable way to integrate WINGS forecasting features into your existing ICO contract.
 
-There is even easier way - to use prepopulated, default, built-in Wings ICO contract - during the project creation wizard you'll be presented with an option:
+There is an even easier way - to use prepopulated, default, built-in Wings ICO contract - during the project creation wizard you'll be presented with an option:
 
 ![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/intro-project-contract.png)
 
@@ -73,11 +82,12 @@ Or you can just copy-page individual files from GitHub repository. Personally I 
 * Solidity - programming language used to create smart contracts
 * [OpenZeppelin](https://github.com/OpenZeppelin/zeppelin-solidity) - collection of great smart contracts
 * [Remix IDE](https://remix.ethereum.org/) - powerful tool for creating Solidity code
+* [Metamask](https://metamask.io/) - Chrome extension allowing interfacing with smart contracts
 * [Etherscan](https://etherscan.io/) - for veryfying source code of our smart contract
 
 
 ### Inheritance
-Many programming languages support inheritance. It's a way of saying that `Tesla` is derived from `Vehicle` and we don't have explain explicitly that is has `Wheels`.
+Many programming languages support inheritance. It's a way of saying that `Tesla` is derived from `Car` and we don't have to explain explicitly that is has `Wheels` *(because they are derived from the base `Car` class)*.
 
 *(note that I didn't say `SteeringWheel` because chances are they replace with self-driving component of some futuristic joystick)*
 
@@ -194,11 +204,11 @@ function BasicCrowdsale(address _owner, address _manager) public {
 }
 ```
 
-*(you don't have to worry, it is happening automaticallye in the `BasicCrowdsale`)*
+*(you don't have to worry, it is happening automatically in the `BasicCrowdsale`)*
 
 ### Custom "MyToken"
 
-Based on the ERC20 we create `MyToken` that will be used for the crowdsale. Note that everytime we `mint` it, we increase the total supply. `MyToken` is `Ownable` - because `mint` function has `onlyOwner()` modifier it means that only owner can mint.
+Based on the ERC20 we create `MyToken` that will be used for the crowdsale. Note that every time we `mint` it, we increase the total supply. `MyToken` is `Ownable` - because `mint` function has `onlyOwner()` modifier it means that only owner can mint.
 
 ```
 contract MyToken is ERC20, Ownable {
@@ -248,19 +258,16 @@ We can structure files the following way:
 
 *(because Ethereum ecosystem is evolving very rapidly, chances are the view of Remix IDE will change)*
 
-Another option is to keep everything in the single file - up to you. It's just like discussion about `tabs` and `spaces`. My humble 2 satoshis in this discussion - do whatever works best for you. Solidity compiler will compile everywthing to EVM (Ethereum Virtual Machine) code anyway.
+Another option is to keep everything in the single file - up to you. It's just like a discussion about `tabs` and `spaces`. My humble 2 satoshis in this discussion - do whatever works best for you. Solidity compiler will compile everything to EVM *(Ethereum Virtual Machine)* code anyway.
 
 ### Deployment
-First we need to deploy `MyToken`. For deployment we will use the [Remix IDE](https://remix.ethereum.org/), Metamask (Chrome extenstion) and Ropsten testnet. The biggest advantage of using these tools is that we don't have operate the full node on our machine and deployment is literally one-click process.
+First we need to deploy `MyToken`. For deployment we will use the [Remix IDE](https://remix.ethereum.org/), Metamask *(Chrome extension)* and Ropsten testnet. The biggest advantage of using these tools is that we don't have to operate the full node *(sometimes it takes forever to synchronise)* on our machine and deployment is literally one-click process.
 
 If you don't have a Metamask account, you can create one with easy and "buy" test Ether - there is a [faucet](https://faucet.metamask.io/) allowing you to get some test Ether for free. It's very handy and practical when testing your code, you should always deploy to the testnet first (no excuses here).
 
 #### Why not Truffle framework?
 
-Many tutorials are using Truffle framework. It's a very sensible choice, it offers handy framework for testing.
-
-However, it's not immediately obvious which Solidity compiler is being used, see [this question on StackOverflow](https://ethereum.stackexchange.com/questions/3256/how-do-i-find-out-the-solidity-compiler-version-i-am-using) and from my own experience it's easier to use combination of Remix and Metamask.
-
+Many tutorials are using Truffle framework. However, it's not immediately obvious which Solidity compiler is being used, see [this question on StackOverflow](https://ethereum.stackexchange.com/questions/3256/how-do-i-find-out-the-solidity-compiler-version-i-am-using) and from my own experience it's easier to use a combination of Remix and Metamask.
 
 ### Deploying the token
 
@@ -371,7 +378,7 @@ I genuinely believe that code is the best documentation and everything should be
 
 ### Constructor parameters
 
-The constructors accepts the following parameters:
+The constructor accepts the following parameters:
 * `uint256 _minimalGoal`
 * `uint256 _hardCap`
 * `uint256 _tokensPerEthPrice`
@@ -381,7 +388,7 @@ Now you should see the importance of creating `MyToken` contract first - we will
 
 
 #### Big numbers in Solidity and JavaScript
-One thing to keep in mind - Solidity has built-in human readable names such as `ether` or `seconds`, `minutes`, `hours`. You can see more in the docs: http://solidity.readthedocs.io/en/v0.4.21/units-and-global-variables.html
+One thing to keep in mind - Solidity has built-in human-readable names such as `ether` or `seconds`, `minutes`, `hours`. You can see more in the docs: http://solidity.readthedocs.io/en/v0.4.21/units-and-global-variables.html
 
 However, when passing `uint256` we will have to use [a converter](https://etherconverter.online/) for example: `1 ether = 1000000000000000000 wei`
 
@@ -405,7 +412,7 @@ You can find the [whole file here](https://github.com/stefek99/wings-integration
 
 ### Summary
 
-We deployed our ICO conract that implements `ICrowdsaleProcessor.sol` and therefore making it compatible with WINGS DAO.
+We deployed our ICO contract that implements `ICrowdsaleProcessor.sol` and therefore making it compatible with WINGS DAO.
 
 Now, we can proceed to WINGS and complete all the required data.
 
@@ -424,14 +431,3 @@ We really wish you well in this journey!
 If there are any discrepancies, rough edges, areas to improve - go ahead and [open an issue on Github](https://github.com/WingsDao/wings-integration/issues), join our community [Telegram chat](https://telegram.me/wingschat), tweet me [@stefek99](https://twitter.com/stefek99) or contact me directly michal@wings.ai or call `+44 758 629 4279` *(my phone is already public anyway)*
 
 I am totally aware how frustrating it is - be stuck on a non-working tutorial and I can make a promise to you that I'll do everything in my ability to make your life easier.
-
-
-### Great learning resources
-
-This tutorial assumes some existing Solidity knowledge. If you want to learn basics I highly recommend two great video course explaining everything from scratch.
-
-If you are a beginner to Ethereum, you'll should probably start with much more approachable resources here:
-* https://coursetro.com/courses/20/Developing-Ethereum-Smart-Contracts-for-Beginners
-* https://www.youtube.com/channel/UCaWes1eWQ9TbzA695gl_PtA
-
-Proper credit to these guys, it takes a lot of effort to create quality tutorial!
