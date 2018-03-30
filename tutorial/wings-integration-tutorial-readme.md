@@ -1,48 +1,69 @@
-Year 2017 was revolutionary in terms of mainstread adoption of blockchain technologies. Bicoin, Ethereum and many other altcoins observed a meteoric rise in price and ICO - initial coin offerings - raised more capital than traditional VC *(venture capital)*. 
+2017 was revolutionary in terms of mainstream adoption of blockchain technologies. Bicoin, Ethereum and many other altcoins observed a meteoric rise in price and ICOs - initial coin offerings - raised more capital than traditional VC *(venture capital)*. 
 
-For many it's a paradigm shift, for me it's one of the many steps on the path of global awakening. People waking up, becoming more resilient, independent, antifragile... Now we don't need to rely on centralized government, we can have independent food, water, energy production. Private schools, private hospitals, private roads, private trains and most importantly - decentralized money.
+For many it's a paradigm shift, for me it's one of the many steps on the path of global awakening. People waking up, becoming more resilient, independent, antifragile... Now we don't need to rely on centralized government, we can have independent food, water, energy production. Private schools, private hospitals, private roads, private trains and most importantly - decentralized money, transparency, consensus protocol.
 
-
-#### DEVELOPER DISCLAIMER
-
-It's not a "Hello World" tutorial. It's the ICO crowdsale. It means there is a serious money on the line. Proceed with caution. Ask for review. Publish your contract upfront - verify on Etherscan so that anyone can see. Hire professional code auditors. I'm not kidding. The additional upside of such approach - potential investors will see that you are taking trust and security matters seriously.
-
-You should always test your smart contract thoroughly and when working in development mode - deploy to your local instance `testrpc` or `testnet` *(Ropsten is one of the most popular options here)*.
-
-#### LEGAL DISCLAIMER
-
-Be cautious about the law. United States of America has some very pecular laws. Even if you are outside the US, never been to US, never intend to go the US - you are still subject to the US laws... And they are "Big Uncle" - with many military bases across the planet. So it is enough that one US citizen sends you some ETH and can land in prison, pretty uncool right?
-
+It's no longer Central Banks *(or Federal Reserve)* printing money and financing war or sugar subsidies - this time around it's code, math and cryptography that governs the rules. You can participate in this change in a number of ways - running your own blockchain project or becoming a developer are surely one of the most exciting options.
 
 ### Audience
 
-You should have some basic knowledge about Ethereum and programming. There are plenty of articles explaing what is blockchain, what is Ethereum, how technology is changing the world.
-
-We will not bore you to death, instead we will present fast, easy and approachable way of integrating Wings forecasting features into your ICO contract.
-
 It's difficult for a single article to be "everything for everyone" but I'll do my best to be approachable, digestable, easy to follow.
 
-Code is the best documentation. I hate to see comments `onlyOwner // only owner` - is that comment meaningful to you in any way? I thought so :) Everything should be self-explanatory. That's the skill of writing code - it's only run by computers, but read and modified by other programmers. The process of typing on the keyboard the characters than end up in the **production code** is maybe 1% of the total development time. All the rest is endless refactoring, testing and making sure that everything works well together.
+You should have some knowledge about Ethereum and programming. 
+
+### Core components of Ethereum
+
+This is a [great article about Ethereum](https://medium.com/@preethikasireddy/how-does-ethereum-work-anyway-22d1df506369) by Preethi Kasireddy and according to Medium it's 33 minutes read. Don't read it now, save it for later *(long haul flight)* and while you are doing so check another article written by her: [Fundamental challenges with public blockchains](https://medium.com/@preethikasireddy/fundamental-challenges-with-public-blockchains-253c800e9428), this time around it's "only" 29 minutes.
+
+Time well spent, depending on the priorities. If you need to level up your Ethereum knowledge, there are plenty of resources out there I don't want to distract you with links, instead let's carry on with the essential content of this tutorial.
+
+
+### It's not "Hello World"...
+
+It's the ICO crowdsale. It means there is serious money on the line. Proceed with caution. Ask for review. Publish your contract upfront *(GitHub and Etherscan)* - verify on Etherscan so that anyone can see. Hire professional auditors. Not kidding. The additional upside of such approach - potential investors will see that you are taking trust and security matters seriously.
+
+You should always test your smart contract thoroughly and when working in development mode - deploy to your local instance `testrpc` or `testnet` *(Ropsten is one of the most popular options here)*.
+
+This tutorial will present an approachable way to integrate WINGS forecasting features into your existing ICO contract.
+
+There is even easier way - to use prepopulated, default, built-in Wings ICO contract - during the project creation wizard you'll be presented with an option:
+
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/intro-project-contract.png)
+
+*(this tutorial focuses on using custom ICO contract, you can always use default WINGS)*
+
+#### Comment about comments
+
+Code is the best documentation. I hate to see comments `onlyOwner // only owner` - is it meaningful in any way? I thought so :) Everything should be self-explanatory. That's the skill of writing code - it's run by computers, but read and modified by other programmers. The process of typing on the keyboard the characters that end up in the **production code** is maybe 1% of the total development time. All the rest is endless refactoring, testing and making sure that everything works well together.
 
 ### Debbugging and error messages
 
 Ethereum ecosystem is changing rapidly. It may happen that a certain command will give you an error message, or I've missed some obvious detail and thing does not work. Please let me know so I can update the tutorial.
 
-You can always do a micro **your-favourite-search-engine-not-namedropping** query and resolve the matter yourself. Or just stick to the common sense and general programming knowledge - you are smart beast! 
+You can always do a micro **your-favourite-search-engine-not-namedropping** query and resolve the matter yourself. Or just stick to the common sense and general programming knowledge - you can do it! 
 
 
-### Why use Wings?
+### Core Components of WINGS on Ethereum
 
-Wings is DAO (decenrtalised autonomous organisation) that curates and evaluates projects, and based on their performance receive service reward payments in the form of ERC20 tokens and Ether.
+WINGS is DAO *(decentralised autonomous organisation)* that curates and evaluates projects, and based on their performance receive service reward payments in the form of ERC20 tokens and Ether.
 
-The main advantages of using Wings DAO are transparency, crowd AI and decentralized curation.
+#### Creator
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/creator.png)
+
+#### Backer
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/backer.png)
+
+#### Evaluator
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/evaluator.png)
+
+
+The main advantages of using WINGS DAO are transparency, crowd AI and decentralized curation.
 
 In order to operate in a fully decentralised way, the ICO contract needs to implement certain methods - in this tutorial we show you step by step what has to be done.
 
 
-### ICO Wings Integration, "technical deep dive"
+### ICO WINGS Integration, "technical deep dive"
 
-We will base our code on Wings Integration repository https://github.com/WingsDao/wings-integration
+We will base our code on WINGS Integration repository https://github.com/WingsDao/wings-integration
 
 It is also available as `npm` package https://www.npmjs.com/package/wings-integration
 
@@ -60,7 +81,7 @@ The two pieces of inheritance:
 
 
 ### ERC20 token
-In our example we will use a custom token based on OpenZeppelin implementation. You have probably seen so many implementations of ERC20 standard, here *(for simplicity)* all the fluff is removed. You can use your own token, as long as it is `ERC20` compatible and you properly implement all methods required by `ICrowdsaleProcessor` interface - it is the essence of Wings integration.
+In our example we will use a custom token based on OpenZeppelin implementation. You have probably seen so many implementations of ERC20 standard, here *(for simplicity)* all the fluff is removed. You can use your own token, as long as it is `ERC20` compatible and you properly implement all methods required by `ICrowdsaleProcessor` interface - it is the essence of WINGS integration.
 
 ```
 contract ERC20 {
@@ -378,13 +399,13 @@ You can find the [whole file here](https://github.com/stefek99/wings-integration
 
 ### Summary
 
-We deployed our ICO conract that implements `ICrowdsaleProcessor.sol` and therefore making it compatible with Wings DAO.
+We deployed our ICO conract that implements `ICrowdsaleProcessor.sol` and therefore making it compatible with WINGS DAO.
 
-Now, when using Wings you can select your own crowdsale smart contract. 
+Now, when using WINGS you can select your own crowdsale smart contract. 
 
 ![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/wings-smart-contract-integration.png)
 
-Upon successful creating your Wings campaign forecasters from all around the world will be able to make their predictions about the success of your ICO.
+Upon successful creating your WINGS campaign forecasters from all around the world will be able to make their predictions about the success of your ICO.
 
 We really wish you well in this journey!
 
