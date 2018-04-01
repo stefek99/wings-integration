@@ -79,12 +79,13 @@ Or you can just copy-page individual files from GitHub repository. Personally I 
 
 #### Other tools we will use
 
+The best thing is - you don't have to install pretty much anything - most of the things run online. The only exception - [Metamask](https://metamask.io/) - Chrome extension but chances are you have it already set up.
+
 * Solidity - programming language used to create smart contracts
 * [OpenZeppelin](https://github.com/OpenZeppelin/zeppelin-solidity) - collection of great smart contracts
 * [Remix IDE](https://remix.ethereum.org/) - powerful tool for creating Solidity code
 * [Metamask](https://metamask.io/) - Chrome extension allowing interfacing with smart contracts
 * [Etherscan](https://etherscan.io/) - for veryfying source code of our smart contract
-
 
 ### Inheritance
 Many programming languages support inheritance. It's a way of saying that `Tesla` is derived from `Car` and we don't have to explain explicitly that is has `Wheels` *(because they are derived from the base `Car` class)*.
