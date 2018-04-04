@@ -411,6 +411,19 @@ Because we separated our code into a few individual files, for Etherscan verific
 
 You can find the [whole file here](https://github.com/stefek99/wings-integration/blob/master/tutorial/full-tutorial.sol).
 
+### After forecasting and crowdsale is finished
+
+Forecasting happens before the crowdsale.
+
+After the forecasting finishes, you have up to 45 days to start the crowdsale.
+
+
+#### Paying rewards to forecasters
+
+Best practice is to release tokens within a reasonable time after finished crowdsale. The first estimate that came to my mind is "withing two weeks" but don't quote me on that. 
+
+Note that WINGS have no power over the owners of the ICO. At the same time we are aware that someone withdrawing their commitment would commit reputational suicide and it is unlikely to happen.
+
 ### Summary
 
 We deployed our ICO contract that implements `ICrowdsaleProcessor.sol` and therefore making it compatible with WINGS DAO.
@@ -422,6 +435,22 @@ Now, we can proceed to WINGS and complete all the required data.
 ![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/project-media.png)
 ![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/project-description.png)
 ![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/wings-smart-contract-integration.png)
+
+#### It is 5000 WINGS to start a project
+
+To create the project you require 5000 WINGS. Make sure you have enough before submitting the project.
+
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/confirm1-publish.png)
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/confirm2-published.png)
+
+#### Allocate rewards
+
+As a project creator you can also allocate a portion of raised ETH and token to the forecasting community. Screenshots below will guide you through the process.
+
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/confirm3-completed.png)
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/confirm4-confirm.png)
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/confirm5-password.png)
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/confirm6-done.png)
 
 Upon successful creating your WINGS campaign forecasters from all around the world will be able to make their predictions about the success of your ICO.
 
