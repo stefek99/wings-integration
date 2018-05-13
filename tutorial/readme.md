@@ -36,7 +36,7 @@ This tutorial will present an approachable way to integrate WINGS forecasting fe
 
 There is an even easier way - to use prepopulated, default, built-in Wings ICO contract - during the project creation wizard you'll be presented with an option:
 
-![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/intro-project-contract.png)
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/images/intro-project-contract.png)
 
 *(this tutorial focuses on using custom ICO contract, you can always use default WINGS)*
 
@@ -55,13 +55,13 @@ You can always do a micro **your-favourite-search-engine-not-namedropping** quer
 WINGS is DAO *(decentralised autonomous organisation)* that curates and evaluates projects, and based on their performance receive service reward payments in the form of ERC20 tokens and Ether.
 
 #### Creator
-![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/creator.png)
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/images/creator.png)
 
 #### Backer
-![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/backer.png)
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/images/backer.png)
 
 #### Evaluator
-![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/evaluator.png)
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/images/evaluator.png)
 
 The main advantages of using WINGS DAO are transparency, crowd AI and decentralized curation.
 
@@ -207,11 +207,13 @@ function BasicCrowdsale(address _owner, address _manager) public {
 
 *(you don't have to worry, it is happening automatically in the `BasicCrowdsale`)*
 
-### Custom "MyToken"
+### ERC20 "MyToken"
 
 Based on the ERC20 we create `MyToken` that will be used for the crowdsale. Note that every time we `mint` it, we increase the total supply. `MyToken` is `Ownable` - because `mint` function has `onlyOwner()` modifier it means that only owner can mint.
 
 ```
+pragma solidity ^0.4.18;
+
 contract MyToken is ERC20, Ownable {
 
   string public name;
@@ -255,7 +257,7 @@ contract MyToken is ERC20, Ownable {
 
 We can structure files the following way:
 
-![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/remix-file-structure.png)
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/images/remix-file-structure.png)
 
 *(because Ethereum ecosystem is evolving very rapidly, chances are the view of Remix IDE will change)*
 
@@ -275,10 +277,10 @@ Many tutorials are using Truffle framework. However, it's not immediately obviou
 We cannot deploy everything all at once, we need to deploy `MyToken` contract first. Then, when deploying `MyCrowdsale` we will pass the `MyToken` contract address to the constructor.
 
 Choose `MyToken`:
-![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/remix-dropdown.png)
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/images/remix-dropdown.png)
 
 Confirm in Metamask:
-![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/metamask-deploy-notification.png)
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/images/metamask-deploy-notification.png)
 
 After few moments *(block confirmation)* you should see:
 
@@ -286,9 +288,12 @@ After few moments *(block confirmation)* you should see:
 
 ### Deploying the crowdsale
 
-`MyCrowdsale` inherits from `BasicCrowdsale` *(that implements some methods)* and `ICrowdsaleProcessor`... Now we need to implement the remainder:
+
+`MyCrowdsale` inherits from [`BasicCrowdsale.sol`](https://github.com/WingsDao/wings-integration/blob/master/contracts/BasicCrowdsale.sol) *(that implements some methods)* and [`ICrowdsaleProcessor.sol`](https://github.com/WingsDao/wings-integration/blob/master/contracts/interfaces/ICrowdsaleProcessor.sol)... Now we need to implement the remainder:
 
 ```
+pragma solidity ^0.4.18;
+
 contract MyCrowdsale is BasicCrowdsale {
   mapping(address => uint256) participants;
 
@@ -411,12 +416,80 @@ Because we separated our code into a few individual files, for Etherscan verific
 
 You can find the [whole file here](https://github.com/stefek99/wings-integration/blob/master/tutorial/full-tutorial.sol).
 
+### Starting the forecast
+
+After the contract is deployed we should call the `start` function:
+
+```
+function start(uint256 _startTimestamp, uint256 _endTimestamp, address _fundingAddress )
+    public
+    onlyManager()   // manager is CrowdsaleController instance
+    hasntStarted()  // not yet started
+    hasntStopped()  // crowdsale wasn't cancelled
+  {
+    ...
+  }
+```
+
+There is a number of ways how to call a smart contract function, probably the easiest one is using MyCrypto / MyEtherWallet.
+
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/images/interact.png)
+
+Note that you'll need to provide contract address and ABI. Also note `onlyManager()` modifier - in our example we used `msg.sender` which means the account who initially deployed the smart contract.
+
+
+### WINGS project creation
+
+We deployed our ICO contract that implements [`ICrowdsaleProcessor.sol`](https://github.com/WingsDao/wings-integration/blob/master/contracts/interfaces/ICrowdsaleProcessor.sol) and therefore making it compatible with WINGS DAO.
+
+Now, we can proceed to WINGS and complete all the required data.
+
+# Category
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/images/project-category.png)
+
+# Title
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/images/project-title.png)
+
+# Media
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/images/project-media.png)
+
+# Description
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/images/project-description.png)
+
+# Smart contract
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/images/wings-smart-contract-integration.png)
+
+#### It is 5000 WINGS tokens to start a project
+
+To create the project you require 5000 WINGS. Make sure you have enough before submitting the project.
+
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/images/confirm1-publish.png)
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/images/confirm2-published.png)
+
+#### Allocate rewards
+
+As a project creator you can also allocate a portion of raised ETH and token to the forecasting community. Screenshots below will guide you through the process.
+
+# Step 1
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/images/confirm3-completed.png)
+
+# Step 2
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/images/confirm4-confirm.png)
+
+# Step 3
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/images/confirm5-password.png)
+
+# Step 4
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/images/confirm6-done.png)
+
+Upon successful creating your WINGS campaign forecasters from all around the world will be able to make their predictions about the success of your ICO.
+
+
 ### After forecasting and crowdsale is finished
 
 Forecasting happens before the crowdsale.
 
 After the forecasting finishes, you have up to 45 days to start the crowdsale.
-
 
 #### Paying rewards to forecasters
 
@@ -424,40 +497,8 @@ Best practice is to release tokens within a reasonable time after finished crowd
 
 Note that WINGS have no power over the owners of the ICO. At the same time we are aware that someone withdrawing their commitment would commit reputational suicide and it is unlikely to happen.
 
-### Summary
-
-We deployed our ICO contract that implements `ICrowdsaleProcessor.sol` and therefore making it compatible with WINGS DAO.
-
-Now, we can proceed to WINGS and complete all the required data.
-
-![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/project-category.png)
-![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/project-title.png)
-![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/project-media.png)
-![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/project-description.png)
-![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/wings-smart-contract-integration.png)
-
-#### It is 5000 WINGS to start a project
-
-To create the project you require 5000 WINGS. Make sure you have enough before submitting the project.
-
-![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/confirm1-publish.png)
-![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/confirm2-published.png)
-
-#### Allocate rewards
-
-As a project creator you can also allocate a portion of raised ETH and token to the forecasting community. Screenshots below will guide you through the process.
-
-![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/confirm3-completed.png)
-![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/confirm4-confirm.png)
-![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/confirm5-password.png)
-![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial/confirm6-done.png)
-
-Upon successful creating your WINGS campaign forecasters from all around the world will be able to make their predictions about the success of your ICO.
-
-We really wish you well in this journey!
-
 ### Feedback and summary
 
-If there are any discrepancies, rough edges, areas to improve - go ahead and [open an issue on Github](https://github.com/WingsDao/wings-integration/issues), join our community [Telegram chat](https://telegram.me/wingschat), tweet me [@stefek99](https://twitter.com/stefek99) or contact me directly michal@wings.ai or call `+44 758 629 4279` *(my phone is already public anyway)*
+If there are any discrepancies, rough edges, areas to improve - go ahead and [open an issue on Github](https://github.com/WingsDao/wings-integration/issues), join our community [Telegram chat](https://telegram.me/wingschat), tweet me [@michalstefanow](https://twitter.com/michalstefanow) or contact me directly michal@wings.ai or call `+44 758 629 4279` *(my phone number is already public anyway)*
 
-I am totally aware how frustrating it is - be stuck on a non-working tutorial and I can make a promise to you that I'll do everything in my ability to make your life easier.
+I am totally aware how frustrating it is - be stuck on a non-working tutorial and I can make a promise that I'm doing everything in my ability to make your life easier.
