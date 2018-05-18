@@ -20,7 +20,6 @@ They have fantastic developer commufnity and many smart contracts are using thei
 Their code is well tested, frequently updated, neatly organized and the ICO contract out-of-the-box supports many common use cases. In other words - cannot recommend OpenZeppelin highly enough. That is why we are using their code internally at WINGS, that is this tutorial is using `OpenZeppelin` too.
 
 
-
 ### Downloading WINGS integration code
 
 There are a few ways of getting WINGS code in place, personally I prefer copy-paste directly from GitHub repository as there are currently only 2 files:
@@ -70,55 +69,71 @@ Then we will add `OpenZeppelin` and `WingsIntegration` npm modules:
 
 From here we can proceed to create our token in `contracts/OurCoin.sol`:
 
-```pragma solidity ^0.4.19;
+```
+pragma solidity ^0.4.19;
 
 import 'zeppelin-solidity/contracts/token/ERC20/MintableToken.sol';
+import 'zeppelin-solidity/contracts/token/ERC20/PausableToken.sol';
 
-contract OurCoin is MintableToken {
+contract OurCoin is MintableToken, PausableToken {
     string public name = "OUR COIN";
     string public symbol = "OUR";
     uint8 public decimals = 18;
 }
 ```
 
+Note that we are using some `OpenZeppelin` conventions that will make our integration smooth.
+
 Now we have a token, lets now can create `contracts/OurCrowdsale.sol`:
 
-```pragma solidity ^0.4.19;
+```
+pragma solidity ^0.4.19;
 
 import './OurCoin.sol';
 import 'zeppelin-solidity/contracts/crowdsale/emission/MintedCrowdsale.sol';
 import 'wings-integration/contracts/BasicCrowdsale.sol';
 
 
-contract OurCrowdsale is MintedCrowdsale BasicCrowdsale {
-    function OurCrowdsale(uint256 _minimalGoal, uint256 _hardCap, uint256 _rate, address _wallet, MintableToken _token)
-        public Crowdsale(_minimalGoal, _hardCap, _rate, _wallet, _token) BasicCrowdsale(msg.sender, msg.sender) {
+contract OurCrowdsale is MintedCrowdsale, BasicCrowdsale {
 
+  event SELL(uint256 start, uint256 end, uint256 now, uint256 tokens);
+
+  mapping(address => uint256) participants; // keeping in track in case refund is needed
+  OurCoin ourCoin;
+
+    function OurCrowdsale(uint256 _minimalGoal, uint256 _hardCap, uint256 _rate, address _wallet, OurCoin _ourCoin)
+        public Crowdsale(_rate, _wallet, _ourCoin) BasicCrowdsale(msg.sender, msg.sender) {
+        minimalGoal = _minimalGoal;
+        hardCap = _hardCap;
+        ourCoin = _ourCoin;
         }
 
-      function getToken() public returns(address) {
-    return address(crowdsaleToken);
+  function getToken() public returns(address) {
+    return address(ourCoin);
   }
 
   // called by CrowdsaleController to transfer reward part of
   // tokens sold by successful crowdsale to Forecasting contract.
   // This call is made upon closing successful crowdfunding process.
   function mintTokenRewards(address _contract, uint256 _amount) public onlyManager()  {
-    crowdsaleToken.mint(_contract, _amount); // crowdsale token is mintable in this example, tokens are created here
+    ourCoin.mint(_contract, _amount); // crowdsale token is mintable in this example, tokens are created here
   }
 
   // transfers crowdsale token from mintable to transferrable state
   function releaseTokens() public onlyManager() hasntStopped() whenCrowdsaleSuccessful() {
-    crowdsaleToken.release();
+    ourCoin.unpause();
   }
 
   // DEFAULT FUNCTION - allows for ETH transfers to the contract
-  function () payable public {
+  function () external payable {
     require(msg.value > 0);
     sellTokens(msg.sender, msg.value);
   }
 
   function sellTokens(address _recepient, uint256 _value) internal hasBeenStarted() hasntStopped() whenCrowdsaleAlive() {
+    
+    
+
     uint256 newTotalCollected = totalCollected + _value;
 
     if (hardCap < newTotalCollected) {
@@ -133,10 +148,12 @@ contract OurCrowdsale is MintedCrowdsale BasicCrowdsale {
     }
 
     // token amount as per price (fixed in this example)
-    uint256 tokensSold = _value * tokensPerEthPrice;
+    uint256 tokensSold = _value * rate;
+
+    SELL(startTimestamp, endTimestamp, now, tokensSold);
 
     // create new tokens for this buyer
-    crowdsaleToken.mint(_recepient, tokensSold);
+    ourCoin.mint(_recepient, tokensSold);
 
     // remember the buyer so he/she/it may refund its ETH if crowdsale failed
     participants[_recepient] += _value;
@@ -165,7 +182,8 @@ contract OurCrowdsale is MintedCrowdsale BasicCrowdsale {
 }
 ```
 
-We are deriving our code from [`BasicCrowdsale.sol`](https://github.com/WingsDao/wings-integration/blob/master/contracts/BasicCrowdsale.sol) that in turns derives from [`ICrowdsaleProcessor.sol`](https://github.com/WingsDao/wings-integration/blob/master/contracts/interfaces/ICrowdsaleProcessor.sol) - we need to implement all the required methods.
+We are deriving our code from [`BasicCrowdsale.sol`](https://github.com/WingsDao/wings-integration/blob/master/contracts/BasicCrowdsale.sol) that in turns derives from [`ICrowdsaleProcessor.sol`](https://github.com/WingsDao/wings-integration/blob/master/contracts/interfaces/ICrowdsaleProcessor.sol) - we are implementing all the required methods.
+
 
 
 ### Deployment
@@ -181,6 +199,50 @@ module.exports = {
             network_id: "*" // Match any network id
         }
     }
+};
+```
+
+Because we are using `Truffle` we also need to specify the `migrations/2_deploy_contracts.js`:
+
+
+```
+const OurCrowdsale = artifacts.require('./OurCrowdsale.sol');
+const OurCoin = artifacts.require('./OurCoin.sol');
+
+module.exports = function(deployer, network, accounts) {
+    let openingTime;
+    if (network === "ropsten") { // when deploying to Ropsten: Web3ProviderEngine does not support synchronous requests
+        openingTime = Math.ceil(new Date() / 1000); // using JavaScript timestamp, removing milliseconds and converting to integer
+    } else {
+        openingTime = web3.eth.getBlock('latest').timestamp;
+    }
+
+    const closingTime = openingTime + 86400 * 20; // 20 days    
+
+    const rate = new web3.BigNumber(1000);
+    const minimalGoal = new web3.BigNumber(web3.toWei(10, "ether"));
+    const hardCap  = new web3.BigNumber(web3.toWei(100 , "ether"));
+    const wallet = accounts[0];
+
+    return deployer
+        .then(() => {
+            return deployer.deploy(OurCoin);
+        })
+        .then(() => {
+            return deployer.deploy(
+                OurCrowdsale,
+                minimalGoal,
+                hardCap,
+                rate,
+                wallet,
+                OurCoin.address
+            );
+        }).then(() => {
+
+            // TODO: transfer ownerhship of the token to the crowdsale for minting
+            // Currently doing that in the UI
+
+        });
 };
 ```
 
@@ -207,87 +269,11 @@ Just be aware of the differences, in some cases it will be the same address, in 
 
 #### Overriding `OpenZeppelin` 
 
-We are overriding some of the functions derived from `OpenZeppelin` - again be extra cautious here. Ensure everything works as expected.
+We are overriding some of the functions derived from `OpenZeppelin` - again be extra cautious here. 
 
-### Deployment to Ropsten (testnet)
+Ensure everything works as expected.
 
-Normally you would have install `geth` and synchronize your node. Luckily there are some options here, namely `--fast --light --warp` options or just skipping the install entirely. Ability to get up and running quickly is essential to adoption. I travel often *(slow WiFi
-)* and my SSD storage is limited - in this tutorial we will use Infura.
-
-No do not need to have full node - we can use [Infura](https://infura.io). Infura is backend for Metamastk.
-
-* https://ethereum.stackexchange.com/questions/13362/to-which-remote-ethereum-nodes-does-metamask-plugin-send-signed-transactions-an
-* http://truffleframework.com/tutorials/using-infura-custom-provider
-* https://github.com/trufflesuite/truffle-hdwallet-provider
-
-
-```npm install truffle-hdwallet-provider```
-
-Now we shoudl update out `truffle.js` file:
-
-```
-var HDWalletProvider = require("truffle-hdwallet-provider");
-var mnemonic = require("./truffle-mnemonic");
-
-module.exports = {
-    networks: {
-        development: {
-            host: "localhost",
-            port: 8545,
-            network_id: "*" // Match any network id
-        },
-        ropsten: {
-        provider: function() {
-            return new HDWalletProvider(mnemonic, "https://ropsten.infura.io/IbQH5ooOmgXLEhyn35yR", 1) // second one
-        },
-        network_id: 3,
-        gas: 4700000
-      }   
-    }
-};
-```
-
-Once we have that we can run:
-
-`truffle migrate --network ropsten`
-
-
-#### Private keys in code
-
-This is tutorial. Using `testnet`. It means that this Ether has absolutely no value and is here for testing purposes.
-
-![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial-zeppelin/images/truffle-warning.png?raw=true)
-
-*(helpful warning from `Truffle` code)*
-
-
-If you committed file locally, it's not too late, see this Github aricle on [Removing sensitive data from a repository](https://help.github.com/articles/removing-sensitive-data-from-a-repository/)
-
-
-`trufle-mnemonic.js`
-`module.exports = "satoshi _____ _____ _____ _____ ______ love"`
-
-```
-.gitignore`
-node-modules
-truffle-mnemonic.js
-```
-
-
-#### What the hell are Truffle migrations
-
-When you look at the Etherscan transaction log you'll notice many contracts being deployed.
-
-https://medium.com/@blockchain101/demystifying-truffle-migrate-21afbcdf3264
-
-![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial-zeppelin/images/openzeppelin-truffle-migrations.png?raw=true)
-
-
-### Verification on Etherscan
-
-Copy all the files into a single file.
-
-There is a great tool called `truffle-flattener` *(`npm install -g` it)* 
+This is an early version of this tutorial and there might be some glitches here or there. 
 
 
 ### Testing
@@ -321,7 +307,7 @@ In order to run it: `truffle test`
 
 That should be a success, we made sure that `owner` and `manager` is set up properly.
 
-Solidity, Truffle, Ethereum ecosystem in general is still in early days and there are many rough endges here or there. In order to provide parameters to the constructor we can do the following:
+Solidity, Truffle, Ethereum ecosystem in general is still in early days and there are many rough endges here or there. In order to provide parameters to the constructor we can use the following syntax:
 
 ```
 contract('OurCrowdsale (custom constructor)', function(accounts) {
@@ -395,6 +381,91 @@ Initially I've experienced troubles findind my test files in the debbugger windo
 ![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial-zeppelin/images/truffle-debugger.png?raw=true)
 
 In that way I was able to pause the execution fo the tests and observe what's going on.
+
+
+### Deployment to Ropsten (testnet)
+
+Normally you would have install `geth` and synchronize your node. Luckily there are some options here, namely `--fast --light --warp` options or just skipping the install entirely. Ability to get up and running quickly is essential to adoption. I travel often *(slow WiFi
+)* and my SSD storage is limited - in this tutorial we will use Infura.
+
+No do not need to have full node - we can use [Infura](https://infura.io). Infura is backend for Metamastk.
+
+* https://ethereum.stackexchange.com/questions/13362/to-which-remote-ethereum-nodes-does-metamask-plugin-send-signed-transactions-an
+* http://truffleframework.com/tutorials/using-infura-custom-provider
+* https://github.com/trufflesuite/truffle-hdwallet-provider
+
+
+```npm install truffle-hdwallet-provider```
+
+Now we should update out `truffle.js` file:
+
+```
+var HDWalletProvider = require("truffle-hdwallet-provider");
+var mnemonic = require("./truffle-mnemonic");
+
+module.exports = {
+    networks: {
+        development: {
+            host: "localhost",
+            port: 8545,
+            network_id: "*" // Match any network id
+        },
+        ropsten: {
+        provider: function() {
+            return new HDWalletProvider(mnemonic, "https://ropsten.infura.io/IbQH5ooOmgXLEhyn35yR", 1) // second one
+        },
+        network_id: 3,
+        gas: 4700000
+      }   
+    }
+};
+```
+
+Once we have that we can run:
+
+`truffle migrate --network ropsten`
+
+
+#### Note about private keys in code
+
+This is tutorial. Using `testnet`. It means that this Ether has absolutely no value and is here for testing purposes.
+
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial-zeppelin/images/truffle-warning.png?raw=true)
+
+*(helpful warning from `Truffle` code)*
+
+
+If you committed file locally, it's not too late, see this Github aricle on [removing sensitive data from a repository](https://help.github.com/articles/removing-sensitive-data-from-a-repository/). If you pushed to the internet it's most likely too late and you better stay on the safe side and treat the private key as compromised.
+
+In order to avoid comitting sensitive data to the code, create `.gitignore` file we add it so that our private keys are not exposed to the world:
+
+```
+node-modules
+truffle-mnemonic.js
+```
+
+Here is my `trufle-mnemonic.js` file. It contains the 12 words mnemonic:
+
+`module.exports = "satoshi _____ _____ _____ _____ ______ love"`
+
+
+
+
+#### What the hell are Truffle migrations
+
+When you look at the Etherscan transaction log you'll notice many contracts being deployed.
+
+https://medium.com/@blockchain101/demystifying-truffle-migrate-21afbcdf3264
+
+![](https://raw.githubusercontent.com/stefek99/wings-integration/master/tutorial-zeppelin/images/openzeppelin-truffle-migrations.png?raw=true)
+
+
+### Verification on Etherscan
+
+Copy all the files into a single file.
+
+There is a great tool called `truffle-flattener` *(`npm install -g` it)* that concatenas project files. It's handy when working with Remix *(online IDE used in previous tutorial)* as well as Etherscan verification.
+
 
 ### WINGS user interface
 
