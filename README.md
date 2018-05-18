@@ -136,8 +136,6 @@ For more detailed requirements, see the [custom crowdsale review checklist](http
 
 ### Specification
 
-Custom crowdsale contract **must** be derived from `BasicCrowdsale` contract which, in turn, is derived from `ICrowdsaleProcessor` which, in turn, is derived from `Ownable` (from zeppelin-solidity library) and `HasManager` contracts.
-
 **Difference between owner and manager:** Owner is typically the address of contract creator's account, manager is the address of the contract to which some actions are delegated. So effectively crowdsale contracts have 2 owners with different access rights.
 
 `BasicCrowdsale` ([see src](https://github.com/WingsDao/wings-integration/blob/master/contracts/BasicCrowdsale.sol)) implements default behavior of custom crowdsale, but BasicCrowdsale.start(...) and BasicCrowdsale.stop() functions **must** be called (via `super` mechanism) if appropriate methods are overriden in derived contracts.
